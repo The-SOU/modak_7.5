@@ -14,6 +14,7 @@ import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.kakao.sdk.template.model.Content
 import org.koin.android.ext.android.bind
 
 class DetailContentActivity : AppCompatActivity() {
@@ -51,7 +52,8 @@ class DetailContentActivity : AppCompatActivity() {
         binding.detailcontentTextviewExplain.text = intent.getStringExtra("destinationExplain")
         binding.detailcontentTextviewTimestamp.text = intent.getStringExtra("destinationTimestamp")
         binding.detailcontentTvCommentcount.text = intent.getStringExtra("destinationCommentCount")
-        binding.detailcontentTvFavoritecount.text = intent.getStringExtra("destinationFavoriteCount")
+        binding.detailcontentTvFavoritecount.text =
+            intent.getStringExtra("destinationFavoriteCount")
         destinationUid = intent.getStringExtra("destinationUid")
         contentUid = intent.getStringExtra("contentUid")
 
@@ -63,6 +65,7 @@ class DetailContentActivity : AppCompatActivity() {
         //댓글업로드 클릭 되었을 때
         binding.detailcontentBtnCommentupload.setOnClickListener {
             commentUpload()
+            requestCommentCount(contentUid!!)
             getCommentCount(contentUid!!)
             commentAlarm(destinationUid!!, binding.detailcontentEdittextComment.text.toString())
         }
@@ -70,6 +73,7 @@ class DetailContentActivity : AppCompatActivity() {
         //좋아요 버튼 클릭되었을 때
         binding.detailcontentLinearFavoritebtn.setOnClickListener {
             favoriteEvent(contentUid!!)
+            getFavorite(contentUid!!)
         }
 
     }
@@ -144,6 +148,15 @@ class DetailContentActivity : AppCompatActivity() {
             }
     }
 
+    fun getFavorite(contentUid: String) {
+        firestore?.collection("contents")?.document(contentUid)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if(documentSnapshot==null)return@addSnapshotListener
+                var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
+                binding.detailcontentTvFavoritecount.text = contentDTO?.favoriteCount.toString()
+            }
+    }
+
     fun favoriteEvent(contentUid: String) {
         var tsDoc = firestore?.collection("contents")?.document(contentUid)
         firestore?.runTransaction { transaction ->
@@ -163,11 +176,11 @@ class DetailContentActivity : AppCompatActivity() {
         }
     }
 
-    fun getCommentCount(contentUid: String) {
+    fun requestCommentCount(contentUid: String) {
         var tsDoc = firestore?.collection("contents")?.document(contentUid)
         firestore?.runTransaction { transaction ->
             var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
-            if(contentDTO != null){
+            if (contentDTO != null) {
                 contentDTO?.commentCount = contentDTO?.commentCount!! + 1
             }
             transaction.set(tsDoc, contentDTO!!)
@@ -175,34 +188,45 @@ class DetailContentActivity : AppCompatActivity() {
         }
     }
 
+    fun getCommentCount(contentUid: String) {
+        firestore?.collection("contents")?.document(contentUid)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
+                binding.detailcontentTvCommentcount.text = contentDTO?.commentCount.toString()
+            }
+    }
+
     fun favoriteAlarm(destinationUid: String) {
-        firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            if(documentSnapshot == null)return@addSnapshotListener
-            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
-            var alarmDTO = AlarmDTO()
-            alarmDTO.destinationUid = destinationUid
-            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
-            alarmDTO.userName = userDTO?.userName
-            alarmDTO.kind = 0
-            alarmDTO.timestamp = System.currentTimeMillis()
-            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
-        }
+        firestore?.collection("users")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                var alarmDTO = AlarmDTO()
+                alarmDTO.destinationUid = destinationUid
+                alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+                alarmDTO.userName = userDTO?.userName
+                alarmDTO.kind = 0
+                alarmDTO.timestamp = System.currentTimeMillis()
+                FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+            }
 
     }
 
     fun commentAlarm(destinationUid: String, message: String) {
-        firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            if(documentSnapshot == null)return@addSnapshotListener
-            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
-            var alarmDTO = AlarmDTO()
-            alarmDTO.destinationUid = destinationUid
-            alarmDTO.message = message
-            alarmDTO.userName = userDTO?.userName
-            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
-            alarmDTO.kind = 1
-            alarmDTO.timestamp = System.currentTimeMillis()
-            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
-        }
+        firestore?.collection("users")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                var alarmDTO = AlarmDTO()
+                alarmDTO.destinationUid = destinationUid
+                alarmDTO.message = message
+                alarmDTO.userName = userDTO?.userName
+                alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+                alarmDTO.kind = 1
+                alarmDTO.timestamp = System.currentTimeMillis()
+                FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+            }
     }
 }
 
