@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MODAKTestOne">
         <activity android:name=".navigation.DetailContentActivity"></activity>
-        <activity android:name=".navigation.SelectedContentActivity" />
         <activity android:name=".navigation.AddContentActivity" />
         <activity android:name=".navigation.BoardContentActivity" />
         <activity android:name=".navigation.SelectRegionActivity" />

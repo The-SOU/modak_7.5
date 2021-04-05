@@ -13,7 +13,7 @@ import com.example.modaktestone.databinding.FragmentBoardBinding
 import com.example.modaktestone.databinding.ItemBoardBinding
 
 class BoardFragment : Fragment() {
-    private var _binding : FragmentBoardBinding? = null
+    private var _binding: FragmentBoardBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +27,19 @@ class BoardFragment : Fragment() {
         binding.boardfragmentRecyclerview.adapter = BoardRecyclerViewAdapter()
         binding.boardfragmentRecyclerview.layoutManager = LinearLayoutManager(this.context)
 
+        //위의 게시판 분류 선택시 이벤트
+        binding.boardfragmentBtnPublicity.setOnClickListener {
+            var fragment = PublicityFragment()
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.main_content, fragment)?.commit()
+        }
+        binding.boardfragmentBtnInformation.setOnClickListener {
+            var fragment = InformationFragment()
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.main_content, fragment)?.commit()
+        }
+
+
         return view
 //        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_board, container, false)
 //        return super.onCreateView(inflater, container, savedInstanceState)
@@ -34,19 +47,22 @@ class BoardFragment : Fragment() {
 
     }
 
-    inner class BoardRecyclerViewAdapter : RecyclerView.Adapter<BoardRecyclerViewAdapter.CustomViewHolder>() {
-        var busanDTO : List<String> = listOf("자유게시판", "비밀게시판", "HOT게시판", "정보게시판", "건강게시판", "트로트게시판", "재취업게시판", "반려견게시판")
+    inner class BoardRecyclerViewAdapter :
+        RecyclerView.Adapter<BoardRecyclerViewAdapter.CustomViewHolder>() {
+        var busanDTO: List<String> =
+            listOf("자유게시판", "비밀게시판", "HOT게시판", "정보게시판", "건강게시판", "트로트게시판", "재취업게시판", "정치게시판")
 
-        inner class CustomViewHolder(val binding : ItemBoardBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class CustomViewHolder(val binding: ItemBoardBinding) :
+            RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
         ): BoardRecyclerViewAdapter.CustomViewHolder {
-            val binding = ItemBoardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding =
+                ItemBoardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CustomViewHolder(binding)
         }
-
 
 
         override fun onBindViewHolder(
