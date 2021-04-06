@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -10,7 +11,7 @@
         android:layout_height="50dp">
 
         <TextView
-            android:id="@+id/boardcontent_textview_boardname"
+            android:id="@+id/boardcontent_textview_myregion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -39,9 +40,9 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:gravity="center">
 
@@ -130,9 +131,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_marginBottom="10dp">
+                    android:gravity="center">
 
                     <LinearLayout
                         android:id="@+id/detailview_btn_calendar"
@@ -380,18 +381,34 @@
                     </LinearLayout>
 
 
-
-
                 </RelativeLayout>
 
 
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="420dp" />
 
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/viewPager"
-                        android:layout_width="300dp"
-                        android:layout_height="300dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="20dp">
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dots_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:dotsColor="@color/whitegrey"
+                        app:dotsCornerRadius="8dp"
+                        app:dotsSize="16dp"
+                        app:dotsSpacing="4dp"
+                        app:dotsWidthFactor="2.5"
+                        app:selectedDotColor="@color/dots_color"
 
+                        />
 
+                </LinearLayout>
 
 
 

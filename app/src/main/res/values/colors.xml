@@ -13,4 +13,5 @@
     <color name="colorDivision">#E0E0E0</color>
     <color name="grey">#535252</color>
     <color name="whitegrey">#919191</color>
+    <color name="dots_color">#1AA780</color>
 </resources>
