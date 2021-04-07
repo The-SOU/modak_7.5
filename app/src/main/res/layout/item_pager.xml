@@ -8,8 +8,10 @@
         android:id="@+id/img_pager"
         android:layout_width="match_parent"
         android:layout_height="280dp"
+        android:scaleType="fitXY"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
+
         android:src="@drawable/information_first"
         android:background="@drawable/layout_ad_background"/>
 

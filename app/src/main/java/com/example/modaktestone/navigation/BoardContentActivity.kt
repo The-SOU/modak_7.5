@@ -1,10 +1,12 @@
 package com.example.modaktestone.navigation
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import org.koin.android.ext.android.bind
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class BoardContentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBoardcontentBinding
@@ -109,7 +114,7 @@ class BoardContentActivity : AppCompatActivity() {
             holder.binding.contentTextviewUsername.text = contentDTOs!![position].userName
 
             holder.binding.contentTextviewTimestamp.text =
-                contentDTOs!![position].timestamp.toString()
+                SimpleDateFormat("MM/dd HH:mm").format(contentDTOs!![position].timestamp)
 
             holder.binding.contentTextviewCommentcount.text =
                 contentDTOs!![position].commentCount.toString()
@@ -123,9 +128,18 @@ class BoardContentActivity : AppCompatActivity() {
                 intent.putExtra("destinationTitle", contentDTOs[position].title)
                 intent.putExtra("destinationExplain", contentDTOs[position].explain)
                 intent.putExtra("destinationUsername", contentDTOs[position].userName)
-                intent.putExtra("destinationTimestamp", contentDTOs[position].timestamp)
-                intent.putExtra("destinationCommentCount", contentDTOs[position].commentCount.toString())
-                intent.putExtra("destinationFavoriteCount", contentDTOs[position].favoriteCount.toString())
+                intent.putExtra(
+                    "destinationTimestamp",
+                    SimpleDateFormat("MM/dd HH:mm").format(contentDTOs[position].timestamp)
+                )
+                intent.putExtra(
+                    "destinationCommentCount",
+                    contentDTOs[position].commentCount.toString()
+                )
+                intent.putExtra(
+                    "destinationFavoriteCount",
+                    contentDTOs[position].favoriteCount.toString()
+                )
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 intent.putExtra("contentUid", contentUidList[position])
                 startActivity(intent)

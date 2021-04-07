@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.template.model.Content
 import org.koin.android.ext.android.bind
+import java.text.SimpleDateFormat
 
 class DetailContentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailContentBinding
@@ -115,7 +116,8 @@ class DetailContentActivity : AppCompatActivity() {
             holder.binding.commentitemTextviewUsername.text = comments[position].userName
             holder.binding.commentitemTextviewComment.text = comments[position].comment
             holder.binding.commentitemTextviewTimestamp.text =
-                comments[position].timestamp.toString()
+                SimpleDateFormat("MM/dd HH:mm").format(comments[position].timestamp)
+
         }
 
         override fun getItemCount(): Int {
@@ -151,7 +153,7 @@ class DetailContentActivity : AppCompatActivity() {
     fun getFavorite(contentUid: String) {
         firestore?.collection("contents")?.document(contentUid)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if(documentSnapshot==null)return@addSnapshotListener
+                if (documentSnapshot == null) return@addSnapshotListener
                 var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
                 binding.detailcontentTvFavoritecount.text = contentDTO?.favoriteCount.toString()
             }

@@ -1,5 +1,6 @@
 package com.example.modaktestone.navigation
 
+import ZoomOutPageTransformer
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,7 +20,10 @@ import com.example.modaktestone.databinding.ItemBestcontentBinding
 import com.example.modaktestone.databinding.ItemPagerBinding
 import com.example.modaktestone.databinding.ItemRepeatboardBinding
 import com.example.modaktestone.navigation.model.ContentDTO
+import com.example.modaktestone.navigation.model.UserDTO
 import com.example.modaktestone.navigation.viewPager.ImageSlideFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_image_slide.view.*
@@ -31,6 +35,7 @@ class DetailViewFragment : Fragment() {
     private val binding get() = _binding!!
 
     var firestore: FirebaseFirestore? = null
+    var currentUserUid: String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +46,7 @@ class DetailViewFragment : Fragment() {
 
         //초기화
         firestore = FirebaseFirestore.getInstance()
+        currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
 
         //자주찾는 게시판 어뎁터와 매니저
         binding.detailviewRecyclerviewRepeatboard.adapter = RepeatboardRecyclerViewAdapter()
@@ -85,18 +91,58 @@ class DetailViewFragment : Fragment() {
         binding.viewPager.adapter = ViewPagerAdapter(requestItem, titleItem, contentItem)
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        //
+        //뷰페이저에 동그라미 인디케이터 추가
         binding.dotsIndicator.setViewPager2(binding.viewPager)
 
+        //내 지역 표시
+        getMyRegion()
 
+        //이벤트 관련 아이템들
+        var eventItem: ArrayList<Int> =
+            arrayListOf(
+                R.drawable.event_first,
+                R.drawable.event_second,
+                R.drawable.event_third,
+                R.drawable.event_forth
+            )
+        var eventTitle: ArrayList<String> =
+            arrayListOf(
+                "연극 <오백에 삼십> 무료 초대 이벤트",
+                "전시 <유에민쥔, 한 시대를 웃다!> 초대 이벤트",
+                "<모네, 빛을 그리다 _ 영혼의 뮤즈> #기대평 이벤트",
+                "뮤지컬 <식구를 찾아서> 무료 초대 이벤트"
+            )
+        var eventContent: ArrayList<String> = arrayListOf(
+            "20팀 초대(1인 2매, 총 40매)",
+            "50명(1인 2매, 총 100매)",
+            "50명(1인 2매, 총 100매)",
+            "30명(1인 2매, 총 60매)"
+        )
 
+        //이벤트 뷰페이저 어댑터와 인디케이터 어댑터
+        binding.viewPagerSecond.adapter = ViewPagerSecondAdapter(eventItem, eventTitle, eventContent)
+        binding.viewPagerSecond.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.dotsIndicatorSecond.setViewPager2(binding.viewPagerSecond)
 
+        //연극 <오백에 삼십> 무료 초대 이벤트, 65세 이상 20팀 초대(1인 2매, 총 40매)
 
+        //전시<유에민쥔, 한 시대를 웃다!> 초대 이벤트, 50명(1인 2매, 총 100매)
+
+        //<모네, 빛을 그리다 _ 영혼의 뮤즈 > #기대평 이벤트, 65세 이상 50명(1인 2매, 총 100매)
+
+        //뮤지컬 <식구를 찾아서> 무료 초대 이벤트, 30명(1인 2매, 총 60매)
 
 
         return view
-//        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail, container, false)
-//        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    fun getMyRegion() {
+        firestore?.collection("users")?.document(currentUserUid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                binding.boardcontentTextviewMyregion.text = regionDTO?.region.toString()
+            }
     }
 
 
@@ -466,6 +512,44 @@ class DetailViewFragment : Fragment() {
             return itemDTO.size
         }
 
+
+    }
+
+    inner class ViewPagerSecondAdapter(
+        eventItemList: ArrayList<Int>,
+        eventTitleList: ArrayList<String>,
+        eventContentList: ArrayList<String>
+    ) : RecyclerView.Adapter<ViewPagerSecondAdapter.CustomViewHolder>() {
+        var itemDTO = eventItemList
+        var titleDTO = eventTitleList
+        var contentDTO = eventContentList
+
+        inner class CustomViewHolder(val binding: ItemPagerBinding) :
+            RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): ViewPagerSecondAdapter.CustomViewHolder {
+            val binding =
+                ItemPagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return CustomViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(
+            holder: ViewPagerSecondAdapter.CustomViewHolder,
+            position: Int
+        ) {
+            holder.binding.imgPager.setImageResource(itemDTO[position])
+
+            holder.binding.pagerTvTitle.text = titleDTO[position]
+
+            holder.binding.pagerTvContent.text = contentDTO[position]
+        }
+
+        override fun getItemCount(): Int {
+            return itemDTO.size
+        }
 
     }
 }

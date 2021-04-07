@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -392,9 +392,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center"
-                    android:layout_marginBottom="20dp">
+                    android:orientation="horizontal">
+
                     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
                         android:id="@+id/dots_indicator"
                         android:layout_width="wrap_content"
@@ -409,10 +410,6 @@
                         />
 
                 </LinearLayout>
-
-
-
-
 
 
             </LinearLayout>
@@ -599,12 +596,32 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <HorizontalScrollView
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager_second"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="420dp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                </HorizontalScrollView>
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dots_indicator_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:dotsColor="@color/whitegrey"
+                        app:dotsCornerRadius="8dp"
+                        app:dotsSize="16dp"
+                        app:dotsSpacing="4dp"
+                        app:dotsWidthFactor="2.5"
+                        app:selectedDotColor="@color/dots_color"
+
+                        />
+
+                </LinearLayout>
 
 
             </LinearLayout>

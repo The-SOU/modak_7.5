@@ -1,8 +1,10 @@
 package com.example.modaktestone
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.app.ActivityCompat
 import com.example.modaktestone.databinding.ActivityMainBinding
 import com.example.modaktestone.navigation.AccountFragment
 import com.example.modaktestone.navigation.AlarmFragment
@@ -18,26 +20,31 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-//        setContentView(R.layout.activity_main)
+
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
+
+        binding.bottomNavigation.selectedItemId = R.id.action_home
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_home -> {
                 var detailViewFragment = DetailViewFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_content, detailViewFragment).commit()
                 return true
             }
             R.id.action_board -> {
                 var boardFragment = BoardFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, boardFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, boardFragment)
+                    .commit()
                 return true
             }
             R.id.action_alarm -> {
                 var alarmFragment = AlarmFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, alarmFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, alarmFragment)
+                    .commit()
                 return true
             }
             R.id.action_account -> {
@@ -46,7 +53,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 var uid = FirebaseAuth.getInstance().currentUser?.uid
                 bundle.putString("destinationUid", uid)
                 accountFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, accountFragment).commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main_content, accountFragment).commit()
                 return true
             }
         }
