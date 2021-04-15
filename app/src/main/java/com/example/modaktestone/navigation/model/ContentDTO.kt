@@ -13,7 +13,7 @@ data class ContentDTO(
     var favorites: MutableMap<String, Boolean> = HashMap(),
     var commentCount: Int = 0,
     var postCount: Int = 0,
-    var anonymity : Map<String, Boolean> = HashMap()
+    var anonymity : MutableMap<String, Boolean> = HashMap()
 ) {
     data class Comment(
         var uid: String? = null,

@@ -2,12 +2,15 @@ package com.example.modaktestone.navigation
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.modaktestone.R
 import com.example.modaktestone.databinding.ActivityAddContentBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
@@ -31,6 +34,7 @@ class AddContentActivity : AppCompatActivity() {
     var photoUri: Uri? = null
     var auth: FirebaseAuth? = null
     var firestore: FirebaseFirestore? = null
+    var anonymityDTO = ContentDTO()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +43,7 @@ class AddContentActivity : AppCompatActivity() {
         setContentView(view)
 
         //인텐트 값 받기
-        if(intent.hasExtra("selectedCategory")){
+        if (intent.hasExtra("selectedCategory")) {
             selectedCategory = intent.getStringExtra("selectedCategory")
         } else {
             Toast.makeText(this, "전달된 이름이 없다", Toast.LENGTH_SHORT).show()
@@ -62,11 +66,38 @@ class AddContentActivity : AppCompatActivity() {
 
         binding.addcontentButtonUpload.setOnClickListener {
 
-            contentUpload()
+            contentUpload(anonymityDTO)
 
             //username, region 얻기.
 
         }
+
+        //익명 버튼 클릭시
+        binding.addcontentLinearAnonymity.setOnClickListener {
+            if (anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)) {
+                anonymityDTO.anonymity.remove(auth?.currentUser?.uid)
+                binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_unanonymity)
+                binding.addcontentTvAnonymity.setTextColor(Color.parseColor("#919191"))
+                binding.addcontentTvAnonymity.setTypeface(null, Typeface.NORMAL)
+                println("anonymity delete complete")
+            } else {
+                anonymityDTO.anonymity[auth?.currentUser?.uid!!] = true
+                binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_anonymity)
+                binding.addcontentTvAnonymity.setTextColor(Color.BLACK)
+                binding.addcontentTvAnonymity.setTypeface(null, Typeface.BOLD)
+                println("anonymity add complete")
+            }
+        }
+
+//        if(anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)){
+//            binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_anonymity)
+//            binding.addcontentTvAnonymity.setTextColor(Color.BLACK)
+//            binding.addcontentTvAnonymity.setTypeface(null, Typeface.BOLD)
+//        }else{
+//            binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_unanonymity)
+//            binding.addcontentTvAnonymity.setTextColor(Color.parseColor("#919191"))
+//            binding.addcontentTvAnonymity.setTypeface(null, Typeface.NORMAL)
+//        }
 
 
     }
@@ -85,14 +116,15 @@ class AddContentActivity : AppCompatActivity() {
     }
 
     // ----- 펑션 모음 -----
-    fun contentUpload() {
+    fun contentUpload(anonimity: ContentDTO) {
+        println(anonimity.anonymity.toString())
         var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         var imageFileName = "IMAGE_" + timestamp + "_.png"
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
 
         var uid = auth?.currentUser?.uid
-        var username : String? = null
-        var region : String? = null
+        var username: String? = null
+        var region: String? = null
         firestore?.collection("users")?.document(uid!!)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
@@ -109,61 +141,83 @@ class AddContentActivity : AppCompatActivity() {
                         ?.continueWith { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
                             return@continueWith storageRef.downloadUrl
                         }?.addOnCompleteListener { uri ->
-                            var contentDTO = ContentDTO()
+                                var contentDTO = ContentDTO()
 
-                            contentDTO.imageUrl = uri.toString()
+                                contentDTO.imageUrl = uri.toString()
 
-                            contentDTO.uid = auth?.currentUser?.uid
+                                contentDTO.uid = auth?.currentUser?.uid
 
-                            contentDTO.userName = username
+                                contentDTO.userName = username
 
-                            contentDTO.region = region
+                                contentDTO.region = region
 
-                            contentDTO.title = binding.addcontentEdittextTitle.text.toString()
+                                contentDTO.title =
+                                    binding.addcontentEdittextTitle.text.toString()
 
-                            contentDTO.explain = binding.addcontentEdittextExplain.text.toString()
+                                contentDTO.explain =
+                                    binding.addcontentEdittextExplain.text.toString()
 
-                            contentDTO.contentCategory = selectedCategory
+                                contentDTO.contentCategory = selectedCategory
 
-                            contentDTO.postCount = contentDTO.postCount + 1
+                                contentDTO.postCount = contentDTO.postCount + 1
 
-                            contentDTO.timestamp = System.currentTimeMillis()
+                            if(anonimity.anonymity.containsKey(auth?.currentUser?.uid!!)){
+                                contentDTO.anonymity[auth?.currentUser?.uid!!] = true
+                            }
 
-                            firestore?.collection("contents")?.add(contentDTO)?.addOnSuccessListener { documentReference ->
-                                Log.d("TAG", "DocumentSnapshot written with ID: ${documentReference.id}")
+                                contentDTO.timestamp = System.currentTimeMillis()
+
+                                firestore?.collection("contents")?.add(contentDTO)
+                                    ?.addOnSuccessListener { documentReference ->
+                                        Log.d(
+                                            "TAG",
+                                            "DocumentSnapshot written with ID: ${documentReference.id}"
+                                        )
+                                    }?.addOnFailureListener { e ->
+                                        Log.w("TAG", "Error adding document", e)
+                                    }
+                                setResult(Activity.RESULT_OK)
+
+                                finish()
+
+                        }
+
+                } else {
+                    //image uri가 존재하지 않을 때
+                        var contentDTO = ContentDTO()
+
+                        contentDTO.uid = auth?.currentUser?.uid
+
+                        contentDTO.userName = username
+
+                        contentDTO.region = region
+
+                        contentDTO.title = binding.addcontentEdittextTitle.text.toString()
+
+                        contentDTO.explain = binding.addcontentEdittextExplain.text.toString()
+
+                        contentDTO.contentCategory = selectedCategory
+
+                    if(anonimity.anonymity.containsKey(auth?.currentUser?.uid!!)){
+                        contentDTO.anonymity[auth?.currentUser?.uid!!] = true
+                    }
+
+
+                        contentDTO.timestamp = System.currentTimeMillis()
+
+                        firestore?.collection("contents")?.add(contentDTO)
+                            ?.addOnSuccessListener { documentReference ->
+                                Log.d(
+                                    "TAG",
+                                    "DocumentSnapshot written with ID: ${documentReference.id}"
+                                )
                             }?.addOnFailureListener { e ->
                                 Log.w("TAG", "Error adding document", e)
                             }
-                            setResult(Activity.RESULT_OK)
+                        setResult(Activity.RESULT_OK)
 
-                            finish()
-                        }
-                } else {
-                    //image uri가 존재하지 않을 때
-                    var contentDTO = ContentDTO()
+                        finish()
 
-                    contentDTO.uid = auth?.currentUser?.uid
-
-                    contentDTO.userName = username
-
-                    contentDTO.region = region
-
-                    contentDTO.title = binding.addcontentEdittextTitle.text.toString()
-
-                    contentDTO.explain = binding.addcontentEdittextExplain.text.toString()
-
-                    contentDTO.contentCategory = selectedCategory
-
-                    contentDTO.timestamp = System.currentTimeMillis()
-
-                    firestore?.collection("contents")?.add(contentDTO)?.addOnSuccessListener { documentReference ->
-                        Log.d("TAG", "DocumentSnapshot written with ID: ${documentReference.id}")
-                    }?.addOnFailureListener { e ->
-                        Log.w("TAG", "Error adding document", e)
-                    }
-                    setResult(Activity.RESULT_OK)
-
-                    finish()
                 }
 
             }

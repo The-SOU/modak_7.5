@@ -10,8 +10,12 @@ import com.example.modaktestone.navigation.AccountFragment
 import com.example.modaktestone.navigation.AlarmFragment
 import com.example.modaktestone.navigation.BoardFragment
 import com.example.modaktestone.navigation.DetailViewFragment
+import com.example.modaktestone.navigation.util.FcmPush
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -28,7 +32,27 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         binding.bottomNavigation.itemIconTintList = null
 
+        registerPushToken()
 
+
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("good")
+        FcmPush.instance.sendMessage("vAIQa8qyN1XJxCsVjPiSPv1gbXi1", "hi", "bye")
+    }
+
+    fun registerPushToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            val token = task.result
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            val map = mutableMapOf<String, Any>()
+            map["pushToken"] = token!!
+
+            FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
+        }
 
     }
 

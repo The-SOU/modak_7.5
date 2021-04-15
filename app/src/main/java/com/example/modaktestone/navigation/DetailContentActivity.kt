@@ -12,6 +12,7 @@ import com.example.modaktestone.databinding.ItemCommentBinding
 import com.example.modaktestone.navigation.model.AlarmDTO
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
+import com.example.modaktestone.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.template.model.Content
@@ -211,6 +212,8 @@ class DetailContentActivity : AppCompatActivity() {
                 alarmDTO.kind = 0
                 alarmDTO.timestamp = System.currentTimeMillis()
                 FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+                FcmPush.instance.sendMessage(destinationUid, "hi", "good")
             }
 
     }
