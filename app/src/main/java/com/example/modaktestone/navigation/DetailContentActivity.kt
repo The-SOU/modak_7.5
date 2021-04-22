@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.R
@@ -13,7 +14,9 @@ import com.example.modaktestone.navigation.model.AlarmDTO
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.example.modaktestone.navigation.util.FcmPush
+import com.example.modaktestone.navigation.util.Notification
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.template.model.Content
 import org.koin.android.ext.android.bind
@@ -70,12 +73,14 @@ class DetailContentActivity : AppCompatActivity() {
             requestCommentCount(contentUid!!)
             getCommentCount(contentUid!!)
             commentAlarm(destinationUid!!, binding.detailcontentEdittextComment.text.toString())
+            sendNotificationComment(destinationUid!!)
         }
 
         //좋아요 버튼 클릭되었을 때
         binding.detailcontentLinearFavoritebtn.setOnClickListener {
             favoriteEvent(contentUid!!)
             getFavorite(contentUid!!)
+            sendNotificationFavorite(destinationUid!!)
         }
 
     }
@@ -232,6 +237,60 @@ class DetailContentActivity : AppCompatActivity() {
                 alarmDTO.timestamp = System.currentTimeMillis()
                 FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
             }
+    }
+
+    private fun sendNotificationFavorite(receiverid: String) {
+
+        firestore?.collection("users")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if(documentSnapshot==null)return@addSnapshotListener
+                var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                var userName = userDTO?.userName
+
+                var title = "알림이 왔습니다"
+                var text = userName + getString(R.string.alarm_favorite)
+
+                val notification = Notification(text, title, receiverid)
+
+                FirebaseDatabase.getInstance().getReference("Notification").push().setValue(notification)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Message sent!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Message didn't sent!!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+
+    }
+
+    private fun sendNotificationComment(receiverid: String) {
+
+        firestore?.collection("users")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if(documentSnapshot==null)return@addSnapshotListener
+                var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                var userName = userDTO?.userName
+
+                var title = "알림이 왔습니다"
+                var text = userName + getString(R.string.alarm_comment)
+
+
+                val notification = Notification(text, title, receiverid)
+
+
+                FirebaseDatabase.getInstance().getReference("Notification").push().setValue(notification)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Message sent!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Message didn't sent!!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+            }
+
+
     }
 }
 

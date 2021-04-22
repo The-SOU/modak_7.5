@@ -15,6 +15,7 @@ import com.example.modaktestone.databinding.ItemContentBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import okio.blackholeSink
 import org.koin.android.ext.android.bind
@@ -61,6 +62,7 @@ class AccountFragment : Fragment() {
         binding.accountBtnLogout.setOnClickListener {
             activity?.finish()
             startActivity(Intent(activity, LoginActivity::class.java))
+            clearToken(currentUserUid!!)
             auth?.signOut()
         }
 
@@ -141,5 +143,9 @@ class AccountFragment : Fragment() {
                 binding.accountTvPostcount.text = postDTO?.postCount.toString()
 
             }
+    }
+
+    private fun clearToken(uid: String){
+        FirebaseDatabase.getInstance().getReference("tokens").child(uid).removeValue()
     }
 }
