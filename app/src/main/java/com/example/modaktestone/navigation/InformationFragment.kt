@@ -14,13 +14,18 @@ import com.example.modaktestone.databinding.FragmentInformationBinding
 import com.example.modaktestone.databinding.ItemBestcontentBinding
 import com.example.modaktestone.databinding.ItemBoardBinding
 import com.example.modaktestone.navigation.model.ContentDTO
+import com.example.modaktestone.navigation.model.UserDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 class InformationFragment : Fragment() {
     private var _binding: FragmentInformationBinding? = null
     private val binding get() = _binding!!
+    var region: String? = null
 
+
+    var auth: FirebaseAuth? = null
     var firestore: FirebaseFirestore? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +37,7 @@ class InformationFragment : Fragment() {
 
         //초기화
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //탭바 클릭 이벤트
         binding.informationfragmentBtnBoard.setOnClickListener {
@@ -72,17 +78,27 @@ class InformationFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")?.whereEqualTo("contentCategory", "지역 내 정보")
-                ?.orderBy("timestamp")?.limit(3)
+            firestore?.collection("users")?.document(auth?.currentUser?.uid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
                     if (documentSnapshot == null) return@addSnapshotListener
-                    for (snapshot in documentSnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                    }
-                    notifyDataSetChanged()
+                    var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                    region = userDTO?.region
+
+                    firestore?.collection("contents")?.whereEqualTo("region", region)
+                        ?.whereEqualTo("contentCategory", "지역 내 정보")
+                        ?.orderBy("timestamp")?.limit(3)
+                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                            contentDTOs.clear()
+                            if (documentSnapshot == null) return@addSnapshotListener
+                            for (snapshot in documentSnapshot.documents) {
+                                var item = snapshot.toObject(ContentDTO::class.java)
+                                contentDTOs.add(item!!)
+                            }
+                            notifyDataSetChanged()
+                        }
+
                 }
+
 
         }
 
@@ -139,13 +155,15 @@ class InformationFragment : Fragment() {
                 }
         }
 
-        inner class CustomViewHolder(val binding: ItemBestcontentBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
+            RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
         ): HotInformationRecyclerViewAdapter.CustomViewHolder {
-            val binding = ItemBestcontentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding =
+                ItemBestcontentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CustomViewHolder(binding)
         }
 

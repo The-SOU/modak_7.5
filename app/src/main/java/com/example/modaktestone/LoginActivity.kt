@@ -1,9 +1,11 @@
 package com.example.modaktestone
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.modaktestone.databinding.ActivityLoginBinding
 import com.example.modaktestone.navigation.SelectRegionActivity
@@ -52,7 +54,20 @@ class LoginActivity : AppCompatActivity() {
         binding.emailLoginButton.setOnClickListener {
             signInAndSignUp()
         }
+
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
     }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
 
 //    private fun getFirebaseJwt(accessToken: String, type:Int) {
 //        val firebaseCustomTokenApi : Retrofit = get()

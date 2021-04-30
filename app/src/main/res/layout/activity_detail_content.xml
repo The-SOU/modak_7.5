@@ -11,19 +11,29 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical">
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center_vertical">-->
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_arrow_back" />
+<!--                <ImageView-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:src="@drawable/ic_arrow_back" />-->
 
-            </RelativeLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/detailcontent_btn_etc"-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:src="@drawable/ic_etc"-->
+<!--                    android:layout_marginRight="20dp"/>-->
+
+<!--            </RelativeLayout>-->
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
@@ -248,7 +258,7 @@
 
 
             <LinearLayout
-                android:id="@+id/detailcontent_linear_anonymity"
+                android:id="@+id/detailcontent_btn_anonymity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
@@ -261,7 +271,7 @@
                     android:id="@+id/detailcontent_imageview_anonymitybtn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/ic_anonymity" />
+                    android:src="@drawable/ic_unanonymity" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -278,7 +288,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/detailcontent_linear_anonymity"
+                android:layout_toRightOf="@id/detailcontent_btn_anonymity"
                 android:hint="댓글을 입력하세요."
                 android:textSize="20sp"
                 android:textStyle="bold" />

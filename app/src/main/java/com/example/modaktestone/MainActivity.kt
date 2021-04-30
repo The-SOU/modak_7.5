@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.modaktestone.databinding.ActivityMainBinding
 import com.example.modaktestone.navigation.*
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         binding.bottomNavigation.selectedItemId = R.id.action_home
 
         binding.bottomNavigation.itemIconTintList = null
+
 
 
         retrieveAndStoreToken()

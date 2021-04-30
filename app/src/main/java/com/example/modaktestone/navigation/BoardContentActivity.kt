@@ -75,19 +75,44 @@ class BoardContentActivity : AppCompatActivity() {
 
 
         init {
-            firestore?.collection("contents")?.whereEqualTo("contentCategory", destinationCategory)
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreExeption ->
-                    contentDTOs.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
 
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-                    notifyDataSetChanged()
+            firestore?.collection("users")?.document(auth?.currentUser?.uid!!)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    if (documentSnapshot == null) return@addSnapshotListener
+                    var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                    region = userDTO?.region
+                    firestore?.collection("contents")?.whereEqualTo("region", region)
+                        ?.whereEqualTo("contentCategory", destinationCategory)
+                        ?.addSnapshotListener { querySnapshot, firebaseFirestoreExeption ->
+                            contentDTOs.clear()
+                            contentUidList.clear()
+                            if (querySnapshot == null) return@addSnapshotListener
+
+                            for (snapshot in querySnapshot!!.documents) {
+                                var item = snapshot.toObject(ContentDTO::class.java)
+                                contentDTOs.add(item!!)
+                                contentUidList.add(snapshot.id)
+                            }
+                            notifyDataSetChanged()
+                        }
                 }
+
+
+//            firestore?.collection("contents")?.whereEqualTo("contentCategory", destinationCategory)
+//                ?.addSnapshotListener { querySnapshot, firebaseFirestoreExeption ->
+//                    contentDTOs.clear()
+//                    contentUidList.clear()
+//                    if (querySnapshot == null) return@addSnapshotListener
+//
+//                    for (snapshot in querySnapshot!!.documents) {
+//                        var item = snapshot.toObject(ContentDTO::class.java)
+//                        contentDTOs.add(item!!)
+//                        contentUidList.add(snapshot.id)
+//                    }
+//                    notifyDataSetChanged()
+//                }
+
+
         }
 
 
@@ -111,7 +136,12 @@ class BoardContentActivity : AppCompatActivity() {
 
             holder.binding.contentTextviewExplain.text = contentDTOs!![position].explain
 
-            holder.binding.contentTextviewUsername.text = contentDTOs!![position].userName
+            if (contentDTOs!![position].anonymity.containsKey(contentDTOs!![position].uid)) {
+                holder.binding.contentTextviewUsername.text = "익명"
+            } else {
+                holder.binding.contentTextviewUsername.text = contentDTOs!![position].userName
+            }
+
 
             holder.binding.contentTextviewTimestamp.text =
                 SimpleDateFormat("MM/dd HH:mm").format(contentDTOs!![position].timestamp)
@@ -125,9 +155,13 @@ class BoardContentActivity : AppCompatActivity() {
             //글을 클릭 했을 때
             holder.binding.contentLinearLayout.setOnClickListener { v ->
                 var intent = Intent(v.context, DetailContentActivity::class.java)
+                if (contentDTOs[position].anonymity.containsKey(contentDTOs[position].uid)) {
+                    intent.putExtra("destinationUsername", "익명")
+                } else {
+                    intent.putExtra("destinationUsername", contentDTOs[position].userName)
+                }
                 intent.putExtra("destinationTitle", contentDTOs[position].title)
                 intent.putExtra("destinationExplain", contentDTOs[position].explain)
-                intent.putExtra("destinationUsername", contentDTOs[position].userName)
                 intent.putExtra(
                     "destinationTimestamp",
                     SimpleDateFormat("MM/dd HH:mm").format(contentDTOs[position].timestamp)

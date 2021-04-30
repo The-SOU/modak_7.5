@@ -34,6 +34,8 @@ class DetailViewFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
+    var region: String? = null
+    var auth: FirebaseAuth? = null
     var firestore: FirebaseFirestore? = null
     var currentUserUid: String? = null
     override fun onCreateView(
@@ -120,7 +122,8 @@ class DetailViewFragment : Fragment() {
         )
 
         //이벤트 뷰페이저 어댑터와 인디케이터 어댑터
-        binding.viewPagerSecond.adapter = ViewPagerSecondAdapter(eventItem, eventTitle, eventContent)
+        binding.viewPagerSecond.adapter =
+            ViewPagerSecondAdapter(eventItem, eventTitle, eventContent)
         binding.viewPagerSecond.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.dotsIndicatorSecond.setViewPager2(binding.viewPagerSecond)
 
@@ -172,7 +175,8 @@ class DetailViewFragment : Fragment() {
             when (boardDTO[position]) {
                 "자유게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "자유게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "자유게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -180,13 +184,14 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
                         }
                 }
                 "비밀게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "비밀게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "비밀게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -194,14 +199,15 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
                 }
                 "정보게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "정보게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "정보게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -209,15 +215,16 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
 
                 }
                 "건강게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "건강게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "건강게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -225,8 +232,8 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
 
@@ -234,7 +241,8 @@ class DetailViewFragment : Fragment() {
                 }
                 "트로트게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "트로트게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "트로트게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -242,8 +250,8 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
 
@@ -251,7 +259,8 @@ class DetailViewFragment : Fragment() {
                 }
                 "재취업게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "재취업게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "재취업게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -259,8 +268,8 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
 
@@ -268,7 +277,8 @@ class DetailViewFragment : Fragment() {
                 }
                 "정치게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")?.whereEqualTo("contentCategory", "정치게시판")
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", "정치게시판")
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                             contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
@@ -276,14 +286,15 @@ class DetailViewFragment : Fragment() {
                                 var item = snapshot.toObject(ContentDTO::class.java)
                                 contentDTOs.add(item!!)
                             }
-                            holder.binding.itemRepeatboardTvBoardcontent.text =
-                                contentDTOs[0].explain.toString()
+//                            holder.binding.itemRepeatboardTvBoardcontent.text =
+//                                contentDTOs[0].explain.toString()
 
                         }
 
 
                 }
             }
+
 
             holder.binding.itemRepeatboardTvBoardname.setOnClickListener { v ->
                 var intent = Intent(v.context, BoardContentActivity::class.java)
@@ -298,29 +309,16 @@ class DetailViewFragment : Fragment() {
         }
     }
 
-    fun getBoardContent(boardname: String) {
-        var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-        firestore?.collection("contents")?.whereEqualTo("contentCategory", boardname)
-            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                contentDTOs.clear()
-                if (documentSnapshot == null) return@addSnapshotListener
-                for (snapshot in documentSnapshot.documents) {
-                    var item = snapshot.toObject(ContentDTO::class.java)
-                    contentDTOs.add(item!!)
-                }
-                item_repeatboard_tv_boardcontent.text = contentDTOs[0].explain.toString()
-
-            }
-
-    }
 
     inner class BestContentRecyclerViewAdapter :
         RecyclerView.Adapter<BestContentRecyclerViewAdapter.CustomViewHolder>() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
+
             firestore?.collection("contents")?.orderBy("favoriteCount", Query.Direction.DESCENDING)
-                ?.limit(2)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                ?.limit(2)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
                     if (documentSnapshot == null) return@addSnapshotListener
                     for (snapshot in documentSnapshot.documents) {
@@ -329,6 +327,8 @@ class DetailViewFragment : Fragment() {
                     }
                     notifyDataSetChanged()
                 }
+
+
         }
 
         inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
@@ -371,7 +371,8 @@ class DetailViewFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")?.whereEqualTo("contentCategory", "지역 내 정보")
+            firestore?.collection("contents")
+                ?.whereEqualTo("contentCategory", "지역 내 정보")
                 ?.orderBy("timestamp")?.limit(3)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
@@ -382,6 +383,7 @@ class DetailViewFragment : Fragment() {
                     }
                     notifyDataSetChanged()
                 }
+
 
         }
 
@@ -426,7 +428,8 @@ class DetailViewFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")?.whereEqualTo("contentCategory", "동호회 홍보")
+            firestore?.collection("contents")
+                ?.whereEqualTo("contentCategory", "동호회 홍보")
                 ?.orderBy("timestamp")?.limit(3)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
@@ -437,6 +440,8 @@ class DetailViewFragment : Fragment() {
                     }
                     notifyDataSetChanged()
                 }
+
+
         }
 
         inner class CustomViewHolder(val binding: ItemBestcontentBinding) :

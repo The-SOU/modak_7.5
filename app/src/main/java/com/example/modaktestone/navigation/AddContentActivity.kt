@@ -89,16 +89,6 @@ class AddContentActivity : AppCompatActivity() {
             }
         }
 
-//        if(anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)){
-//            binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_anonymity)
-//            binding.addcontentTvAnonymity.setTextColor(Color.BLACK)
-//            binding.addcontentTvAnonymity.setTypeface(null, Typeface.BOLD)
-//        }else{
-//            binding.addcontentImageviewAnonymity.setImageResource(R.drawable.ic_unanonymity)
-//            binding.addcontentTvAnonymity.setTextColor(Color.parseColor("#919191"))
-//            binding.addcontentTvAnonymity.setTypeface(null, Typeface.NORMAL)
-//        }
-
 
     }
 
@@ -116,8 +106,8 @@ class AddContentActivity : AppCompatActivity() {
     }
 
     // ----- 펑션 모음 -----
-    fun contentUpload(anonimity: ContentDTO) {
-        println(anonimity.anonymity.toString())
+    fun contentUpload(anonymity: ContentDTO) {
+        println(anonymity.anonymity.toString())
         var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         var imageFileName = "IMAGE_" + timestamp + "_.png"
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
@@ -161,7 +151,7 @@ class AddContentActivity : AppCompatActivity() {
 
                                 contentDTO.postCount = contentDTO.postCount + 1
 
-                            if(anonimity.anonymity.containsKey(auth?.currentUser?.uid!!)){
+                            if(anonymity.anonymity.containsKey(auth?.currentUser?.uid!!)){
                                 contentDTO.anonymity[auth?.currentUser?.uid!!] = true
                             }
 
@@ -198,7 +188,7 @@ class AddContentActivity : AppCompatActivity() {
 
                         contentDTO.contentCategory = selectedCategory
 
-                    if(anonimity.anonymity.containsKey(auth?.currentUser?.uid!!)){
+                    if(anonymity.anonymity.containsKey(auth?.currentUser?.uid!!)){
                         contentDTO.anonymity[auth?.currentUser?.uid!!] = true
                     }
 

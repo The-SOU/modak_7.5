@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.*
 import com.example.modaktestone.navigation.model.ContentDTO
+import com.example.modaktestone.navigation.model.UserDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import org.koin.android.ext.android.bind
@@ -19,7 +21,9 @@ class PublicityFragment : Fragment() {
     private var _binding: FragmentPublicityBinding? = null
     private val binding get() = _binding!!
 
+    var region: String? = null
     var firestore: FirebaseFirestore? = null
+    var auth: FirebaseAuth? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +34,7 @@ class PublicityFragment : Fragment() {
 
         //초기화
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //상위 탭바 분류 클릭 시 이벤트
         binding.publicityfragmentBtnBoard.setOnClickListener {
@@ -65,17 +70,27 @@ class PublicityFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")?.whereEqualTo("contentCategory", "동호회 홍보")
-                ?.orderBy("timestamp")?.limit(3)
+            firestore?.collection("users")?.document(auth?.currentUser?.uid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
                     if (documentSnapshot == null) return@addSnapshotListener
-                    for (snapshot in documentSnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                    }
-                    notifyDataSetChanged()
+                    var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                    region = userDTO?.region
+
+                    firestore?.collection("contents")?.whereEqualTo("region", region)
+                        ?.whereEqualTo("contentCategory", "동호회 홍보")
+                        ?.orderBy("timestamp")?.limit(3)
+                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                            contentDTOs.clear()
+                            if (documentSnapshot == null) return@addSnapshotListener
+                            for (snapshot in documentSnapshot.documents) {
+                                var item = snapshot.toObject(ContentDTO::class.java)
+                                contentDTOs.add(item!!)
+                            }
+                            notifyDataSetChanged()
+                        }
                 }
+
+
         }
 
         inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
@@ -133,13 +148,15 @@ class PublicityFragment : Fragment() {
                 }
         }
 
-        inner class CustomViewHolder(val binding: ItemBestcontentBinding) : RecyclerView.ViewHolder(binding.root)
+        inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
+            RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
         ): HotPublicityRecyclerViewAdapter.CustomViewHolder {
-           val binding = ItemBestcontentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding =
+                ItemBestcontentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CustomViewHolder(binding)
         }
 
