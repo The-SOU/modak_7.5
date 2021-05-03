@@ -13,16 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-<!--        <service-->
-<!--            android:name=".MyFirebaseMessagingService"-->
-<!--            android:permission="com.google.android.c2dm.permission.SEND">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
-<!--                <action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-<!--            </intent-filter>-->
-<!--        </service>-->
-
+        <activity android:name=".navigation.ReportViewActivity"></activity>
         <activity android:name=".navigation.DetailContentActivity" />
         <activity android:name=".navigation.AddContentActivity" />
         <activity android:name=".navigation.EditContentActivity" />
@@ -36,10 +27,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
-
             <intent-filter>
-                <action android:name="com.example.modaktestone"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.example.modaktestone" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
@@ -54,20 +45,15 @@
                     android:host="oauth"
                     android:scheme="kakaoe55c02914e0d51f60e971b486733ed22" />
             </intent-filter>
-        </activity>
-
-<!--        <meta-data-->
-<!--            android:name="com.google.firebase.messaging.default_notification_icon"-->
-<!--            android:resource="@drawable/logo_title" />-->
-<!--        <meta-data-->
-<!--            android:name="com.google.firebase.messaging.default_notification_color"-->
-<!--            android:resource="@color/dots_color" />-->
-
+        </activity> <!-- <meta-data -->
+        <!-- android:name="com.google.firebase.messaging.default_notification_icon" -->
+        <!-- android:resource="@drawable/logo_title" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.firebase.messaging.default_notification_color" -->
+        <!-- android:resource="@color/dots_color" /> -->
         <service android:name=".navigation.util.FCMService">
-
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
     </application>

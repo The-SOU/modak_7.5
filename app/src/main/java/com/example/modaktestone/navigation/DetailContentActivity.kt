@@ -1,11 +1,11 @@
 package com.example.modaktestone.navigation
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import android.widget.Toolbar
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.R
@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
+
 
 class DetailContentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailContentBinding
@@ -37,14 +38,14 @@ class DetailContentActivity : AppCompatActivity() {
     var editExplain: String? = null
 
 
-
-
     var uid: String? = null
 
     var auth: FirebaseAuth? = null
     var firestore: FirebaseFirestore? = null
 
     var anonymityDTO = ContentDTO.Comment()
+
+    private lateinit var myDialog: AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_detail_content)
@@ -56,8 +57,8 @@ class DetailContentActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
-        editTitle = intent.getStringExtra("destinationTitle")
-        editExplain = intent.getStringExtra("destinationExplain")
+        destinationTitle = intent.getStringExtra("destinationTitle")
+        destinationExplain = intent.getStringExtra("destinationExplain")
 
 
         //컨텐츠 내용 띄우기
@@ -114,41 +115,51 @@ class DetailContentActivity : AppCompatActivity() {
 
         binding.detailcontentRecyclerview.adapter = DetailContentRecycleViewAdapter()
         binding.detailcontentRecyclerview.layoutManager = LinearLayoutManager(this)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        if(uid==destinationUid){
+        if (uid == destinationUid) {
             //이 글의 게시자가 자신의 글을 보고있다면
             inflater.inflate(R.menu.detailcontent_option_menu, menu)
-        }else{
+        } else {
             //다른 사람이 게시글을 보고 있다면
             inflater.inflate(R.menu.detailcontent_option_menu_second, menu)
         }
         return true
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item_edit -> {
                 Toast.makeText(this, "글을 수정하겠습니다.", Toast.LENGTH_SHORT).show()
                 var editIntent = Intent(this, EditContentActivity::class.java)
-                editIntent.putExtra("editTitle", editTitle)
-                editIntent.putExtra("editExplain", editExplain)
+                editIntent.putExtra("editTitle", destinationTitle)
+                editIntent.putExtra("editExplain", destinationExplain)
                 editIntent.putExtra("contentUid", contentUid)
                 startActivity(editIntent)
                 finish()
                 true
             }
             R.id.item_delete -> {
-                firestore?.collection("contents")?.document(contentUid!!)?.delete()?.addOnCompleteListener {
-                    Toast.makeText(this, "글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
+                firestore?.collection("contents")?.document(contentUid!!)?.delete()
+                    ?.addOnCompleteListener {
+                        Toast.makeText(this, "글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
                 true
             }
             R.id.item_report -> {
                 Toast.makeText(this, "해당 게시자를 신고하였습니다.", Toast.LENGTH_SHORT).show()
+                var reportIntent = Intent(this, ReportViewActivity::class.java)
+                reportIntent.putExtra("targetContent", contentUid)
+                reportIntent.putExtra("targetTitle", destinationTitle )
+                reportIntent.putExtra("targetExplain", destinationExplain)
+                startActivity(reportIntent)
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
