@@ -2,6 +2,7 @@ package com.example.modaktestone.navigation
 
 import ZoomOutPageTransformer
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -127,13 +128,11 @@ class DetailViewFragment : Fragment() {
         binding.viewPagerSecond.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.dotsIndicatorSecond.setViewPager2(binding.viewPagerSecond)
 
-        //연극 <오백에 삼십> 무료 초대 이벤트, 65세 이상 20팀 초대(1인 2매, 총 40매)
-
-        //전시<유에민쥔, 한 시대를 웃다!> 초대 이벤트, 50명(1인 2매, 총 100매)
-
-        //<모네, 빛을 그리다 _ 영혼의 뮤즈 > #기대평 이벤트, 65세 이상 50명(1인 2매, 총 100매)
-
-        //뮤지컬 <식구를 찾아서> 무료 초대 이벤트, 30명(1인 2매, 총 60매)
+        //상위 4개 버튼 모음
+        binding.detailviewBtnHomepage.setOnClickListener { v ->
+            var intent = Intent(v.context, HomeRegionActivity::class.java)
+            startActivity(intent)
+        }
 
 
         return view

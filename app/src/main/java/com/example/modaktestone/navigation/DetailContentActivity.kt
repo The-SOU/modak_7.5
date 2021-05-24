@@ -112,6 +112,7 @@ class DetailContentActivity : AppCompatActivity() {
         ab.setDisplayShowTitleEnabled(false)
         ab.setDisplayShowCustomEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
+        ab.setDisplayHomeAsUpEnabled(true)
 
         binding.detailcontentRecyclerview.adapter = DetailContentRecycleViewAdapter()
         binding.detailcontentRecyclerview.layoutManager = LinearLayoutManager(this)
@@ -159,6 +160,10 @@ class DetailContentActivity : AppCompatActivity() {
                 reportIntent.putExtra("targetTitle", destinationTitle )
                 reportIntent.putExtra("targetExplain", destinationExplain)
                 startActivity(reportIntent)
+                finish()
+                true
+            }
+            android.R.id.home -> {
                 finish()
                 true
             }

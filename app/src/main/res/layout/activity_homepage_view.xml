@@ -13,14 +13,13 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="게시글 신고"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="게시글 신고"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="25sp"-->
+<!--            android:textStyle="bold" />-->
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -32,15 +31,24 @@
         android:background="@color/colorDivision"
         android:orientation="horizontal" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_division"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
     <TextView
-        android:id="@+id/report_tv_title"
+        android:id="@+id/homepage_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_division"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="25dp"
-        android:text="해당 게시글을 \n신고하는 이유를 선택해주세요."
+        android:text="찾으시는 복지관을 선택해주세요."
         android:textColor="@color/black"
         android:textSize="23sp"
         android:textStyle="bold"/>
@@ -49,7 +57,7 @@
         android:id="@+id/division_first"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/report_tv_title"
+        android:layout_below="@id/homepage_tv_title"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="25dp"
@@ -57,7 +65,7 @@
         android:orientation="horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/report_recyclerview"
+        android:id="@+id/home_recyclerview"
         android:layout_below="@id/division_first"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
@@ -67,5 +75,35 @@
 
 
     </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/division_last"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/home_recyclerview"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="25dp"
+                android:background="@color/colorDivision"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/homepage_tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/division_last"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="25dp"
+                android:text="위 목록은 현재 홈페이지가 운영중인 \n복지관만 표시되어 있음을 알려드립니다."
+                android:textColor="@color/grey"
+                android:textSize="20sp"
+                android:textStyle="normal"/>
+
+
+
+
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

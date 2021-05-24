@@ -50,6 +50,8 @@ class SelectRegionActivity : AppCompatActivity() {
             moveMainPage()
 
         }
+
+
     }
 
     fun usernameAndRegion() {

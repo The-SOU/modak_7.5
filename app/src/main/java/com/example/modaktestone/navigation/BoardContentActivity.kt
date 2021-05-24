@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -63,6 +64,25 @@ class BoardContentActivity : AppCompatActivity() {
             var intent = Intent(v.context, AddContentActivity::class.java)
             intent.putExtra("selectedCategory", destinationCategory)
             startActivity(intent)
+        }
+
+        //툴바 설정
+        val toolbar = binding.myToolbar
+        setSupportActionBar(toolbar)
+        val ab = supportActionBar!!
+        ab.setDisplayShowTitleEnabled(false)
+        ab.setDisplayShowCustomEnabled(true)
+        ab.setDisplayHomeAsUpEnabled(true)
+        ab.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
