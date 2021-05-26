@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -35,10 +36,11 @@ class DetailViewFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    var region: String? = null
     var auth: FirebaseAuth? = null
     var firestore: FirebaseFirestore? = null
     var currentUserUid: String? = null
+    var region: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +52,12 @@ class DetailViewFragment : Fragment() {
         //초기화
         firestore = FirebaseFirestore.getInstance()
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        firestore?.collection("users")?.document(currentUserUid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                region = regionDTO?.region.toString()
+            }
 
         //자주찾는 게시판 어뎁터와 매니저
         binding.detailviewRecyclerviewRepeatboard.adapter = RepeatboardRecyclerViewAdapter()
@@ -150,6 +158,7 @@ class DetailViewFragment : Fragment() {
 
     inner class RepeatboardRecyclerViewAdapter :
         RecyclerView.Adapter<RepeatboardRecyclerViewAdapter.CustomViewHolder>() {
+
         var boardDTO: List<String> =
             listOf("자유게시판", "비밀게시판", "정보게시판", "건강게시판", "트로트게시판", "재취업게시판", "정치게시판")
 
@@ -174,126 +183,208 @@ class DetailViewFragment : Fragment() {
             when (boardDTO[position]) {
                 "자유게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "자유게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "자유게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
+
                         }
+
                 }
                 "비밀게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "비밀게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "비밀게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
 
                         }
                 }
                 "정보게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "정보게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "정보게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
 
                         }
 
                 }
                 "건강게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "건강게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "건강게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
 
                         }
-
-
                 }
                 "트로트게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "트로트게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "트로트게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
 
                         }
-
-
                 }
                 "재취업게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "재취업게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "재취업게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
 
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+                                }
                         }
-
-
                 }
                 "정치게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-                    firestore?.collection("contents")
-                        ?.whereEqualTo("contentCategory", "정치게시판")
+
+                    firestore?.collection("users")?.document(currentUserUid!!)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            contentDTOs.clear()
                             if (documentSnapshot == null) return@addSnapshotListener
-                            for (snapshot in documentSnapshot.documents) {
-                                var item = snapshot.toObject(ContentDTO::class.java)
-                                contentDTOs.add(item!!)
-                            }
-//                            holder.binding.itemRepeatboardTvBoardcontent.text =
-//                                contentDTOs[0].explain.toString()
+                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                            firestore?.collection("contents")
+                                ?.whereEqualTo("region", regionDTO!!.region)
+                                ?.whereEqualTo("contentCategory", "자유게시판")
+                                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                                    contentDTOs.clear()
+                                    if (documentSnapshot == null) return@addSnapshotListener
+                                    for (snapshot in documentSnapshot.documents) {
+                                        var item = snapshot.toObject(ContentDTO::class.java)
+                                        contentDTOs.add(item!!)
+                                    }
+                                    if (contentDTOs.size != 0) {
+                                        holder.binding.itemRepeatboardTvBoardcontent.text =
+                                            contentDTOs[0].explain.toString()
+
+                                    } else {
+                                        println(contentDTOs.size)
+                                    }
+
+                                }
 
                         }
-
-
                 }
             }
-
 
             holder.binding.itemRepeatboardTvBoardname.setOnClickListener { v ->
                 var intent = Intent(v.context, BoardContentActivity::class.java)
@@ -370,17 +461,22 @@ class DetailViewFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")
-                ?.whereEqualTo("contentCategory", "지역 내 정보")
-                ?.orderBy("timestamp")?.limit(3)
+            firestore?.collection("users")?.document(currentUserUid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
                     if (documentSnapshot == null) return@addSnapshotListener
-                    for (snapshot in documentSnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                    }
-                    notifyDataSetChanged()
+                    var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                    firestore?.collection("contents")?.whereEqualTo("region", regionDTO!!.region)
+                        ?.whereEqualTo("contentCategory", "지역 내 정보")
+                        ?.orderBy("timestamp")?.limit(3)
+                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                            contentDTOs.clear()
+                            if (documentSnapshot == null) return@addSnapshotListener
+                            for (snapshot in documentSnapshot.documents) {
+                                var item = snapshot.toObject(ContentDTO::class.java)
+                                contentDTOs.add(item!!)
+                            }
+                            notifyDataSetChanged()
+                        }
                 }
 
 
@@ -427,20 +523,23 @@ class DetailViewFragment : Fragment() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
         init {
-            firestore?.collection("contents")
-                ?.whereEqualTo("contentCategory", "동호회 홍보")
-                ?.orderBy("timestamp")?.limit(3)
+            firestore?.collection("users")?.document(currentUserUid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
                     if (documentSnapshot == null) return@addSnapshotListener
-                    for (snapshot in documentSnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                    }
-                    notifyDataSetChanged()
+                    var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
+                    firestore?.collection("contents")?.whereEqualTo("region", regionDTO!!.region)
+                        ?.whereEqualTo("contentCategory", "동호회 홍보")
+                        ?.orderBy("timestamp")?.limit(3)
+                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                            contentDTOs.clear()
+                            if (documentSnapshot == null) return@addSnapshotListener
+                            for (snapshot in documentSnapshot.documents) {
+                                var item = snapshot.toObject(ContentDTO::class.java)
+                                contentDTOs.add(item!!)
+                            }
+                            notifyDataSetChanged()
+                        }
                 }
-
-
         }
 
         inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
