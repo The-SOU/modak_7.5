@@ -12,22 +12,6 @@
         android:layout_height="45dp"
         android:gravity="center_vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/logo_title" />
-
-            <ImageView
-                android:id="@+id/selectregion_imageivew_arrowback"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_arrow_back" />
-
-        </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -59,14 +43,61 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/selectexplain"/>
+        android:layout_below="@+id/selectexplain"
+        android:background="@drawable/spinner_background"/>
+
+    <TextView
+        android:id="@+id/selectexplain_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="성별을 선택해주세요."
+        android:layout_below="@+id/selectregion_spinner"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        />
+
+    <Spinner
+        android:id="@+id/selectregion_spinner_sex"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectexplain_second"
+        android:background="@drawable/spinner_background"/>
+
+    <TextView
+        android:id="@+id/selectexplain_third"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="출생년도를 선택해주세요."
+        android:layout_below="@+id/selectregion_spinner_sex"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        />
+
+    <Spinner
+        android:id="@+id/selectregion_spinner_birth"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectexplain_third"
+        android:background="@drawable/spinner_background"/>
 
     <TextView
         android:id="@+id/createname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="활동하실 이름을 정해주세요. "
-        android:layout_below="@+id/selectregion_spinner"
+        android:layout_below="@+id/selectregion_spinner_birth"
         android:textSize="25sp"
         android:layout_margin="10dp"
         android:textColor="@color/black"
@@ -89,15 +120,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="20dp">
 
         <Button
             android:id="@+id/selectregion_btn"
-            android:layout_below="@id/selectregion_edittext_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"
             android:text="시작하기"
-            android:textSize="25sp"/>
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:background="@drawable/layout_dialog_radius"
+            android:backgroundTint="@color/dots_color" />
     </LinearLayout>
 
 
