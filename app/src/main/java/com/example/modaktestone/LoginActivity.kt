@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.modaktestone.databinding.ActivityLoginBinding
+import com.example.modaktestone.navigation.PhoneCertificationActivity
 import com.example.modaktestone.navigation.SelectRegionActivity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -43,6 +44,11 @@ class LoginActivity : AppCompatActivity() {
             .requestIdToken("107280891504-iambicb740bfiffs3ckmcf31fv0rkar8.apps.googleusercontent.com")
             .requestEmail().build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        binding.phonenumberLoginButton.setOnClickListener {
+            startActivity(Intent(this, PhoneCertificationActivity::class.java))
+            finish()
+        }
 
         binding.googleLoginButton.setOnClickListener {
             //First step

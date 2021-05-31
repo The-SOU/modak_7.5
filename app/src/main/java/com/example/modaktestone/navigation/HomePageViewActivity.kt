@@ -40,7 +40,7 @@ class HomePageViewActivity : AppCompatActivity() {
 
         //초기화
         firestore = FirebaseFirestore.getInstance()
-        uid = FirebaseAuth.getInstance().currentUser.uid
+        uid = FirebaseAuth.getInstance().currentUser?.uid
 
         //인텐트 값 받기
         destinationRegion = intent.getStringExtra("destinationRegion")

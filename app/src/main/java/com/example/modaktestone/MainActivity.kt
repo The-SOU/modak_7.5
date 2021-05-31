@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             if(task.isSuccessful){
                 val token: String? = task.result
 
-                val userId: String? = FirebaseAuth.getInstance().currentUser.uid
+                val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
 
                 FirebaseDatabase.getInstance().getReference("tokens").child(userId!!).setValue(token)
             }

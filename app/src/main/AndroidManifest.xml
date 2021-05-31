@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".navigation.HomeRegionActivity"/>
-        <activity android:name=".navigation.HomePageViewActivity"/>
+        <activity android:name=".navigation.PhoneCertificationActivity"></activity>
+        <activity android:name=".navigation.HomeRegionActivity" />
+        <activity android:name=".navigation.HomePageViewActivity" />
         <activity android:name=".navigation.InputActivity" />
         <activity android:name=".navigation.ReportViewActivity" />
         <activity android:name=".navigation.DetailContentActivity" />
