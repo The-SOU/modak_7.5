@@ -136,12 +136,31 @@ class DetailViewFragment : Fragment() {
         binding.viewPagerSecond.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.dotsIndicatorSecond.setViewPager2(binding.viewPagerSecond)
 
+
+
+        //복지혜택 관련 아이템들
+        var welfareItem: ArrayList<Int> = arrayListOf(
+            R.drawable.welfare_first,
+            R.drawable.welfare_second,
+            R.drawable.welfare_third
+        )
+        var welfareTitle: ArrayList<String> =
+            arrayListOf(
+                "서울노인복지센터 - 취업상담지원 제공",
+                "서울노인복지센터 - 급식지원",
+                "서울대학교 간호대학교 학생들과 함께하는 건강관리교실 다소니"
+            )
+
+        binding.viewPagerThird.adapter = ViewPagerThirdAdapter(welfareItem, welfareTitle)
+        binding.viewPagerThird.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        binding.dotsIndicatorThird.setViewPager2(binding.viewPagerThird)
+
+
         //상위 4개 버튼 모음
         binding.detailviewBtnHomepage.setOnClickListener { v ->
             var intent = Intent(v.context, HomeRegionActivity::class.java)
             startActivity(intent)
         }
-
 
         return view
     }
@@ -648,6 +667,42 @@ class DetailViewFragment : Fragment() {
             holder.binding.pagerTvTitle.text = titleDTO[position]
 
             holder.binding.pagerTvContent.text = contentDTO[position]
+        }
+
+        override fun getItemCount(): Int {
+            return itemDTO.size
+        }
+
+    }
+
+    inner class ViewPagerThirdAdapter(
+        welfareItemList: ArrayList<Int>,
+        welfareTitleList: ArrayList<String>
+    ) : RecyclerView.Adapter<ViewPagerThirdAdapter.CustomViewHolder>() {
+        var itemDTO = welfareItemList
+        var titleDTO = welfareTitleList
+
+        inner class CustomViewHolder(val binding: ItemPagerBinding) :
+            RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): ViewPagerThirdAdapter.CustomViewHolder {
+            val binding =
+                ItemPagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return CustomViewHolder(binding)
+        }
+ß
+        override fun onBindViewHolder(
+            holder: ViewPagerThirdAdapter.CustomViewHolder,
+            position: Int
+        ) {
+            holder.binding.imgPager.setImageResource(itemDTO[position])
+
+            holder.binding.pagerTvTitle.text = titleDTO[position]
+
+            holder.binding.pagerTvContent.visibility = View.GONE
         }
 
         override fun getItemCount(): Int {
