@@ -693,7 +693,6 @@ class DetailViewFragment : Fragment() {
                 ItemPagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CustomViewHolder(binding)
         }
-ß
         override fun onBindViewHolder(
             holder: ViewPagerThirdAdapter.CustomViewHolder,
             position: Int

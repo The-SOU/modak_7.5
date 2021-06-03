@@ -183,4 +183,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+    //어스에 커렌트유저가 있으면 바로메인페이지
+//    override fun onStart() {
+//        super.onStart()
+//        moveMainpage(auth?.currentUser)
+//    }
 }

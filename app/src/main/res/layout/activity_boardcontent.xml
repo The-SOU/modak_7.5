@@ -52,25 +52,38 @@
         <LinearLayout
             android:id="@+id/boardcontent_btn_upload"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:orientation="horizontal"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/layout_detailview_background"
-            android:backgroundTint="@color/white">
+            android:background="@drawable/layout_dialog_radius"
+            android:backgroundTint="@color/dots_color" >
 
-            <ImageView
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:src="@drawable/ic_pencil"/>
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="글 쓰기"
-                android:textSize="25sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp"/>
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_gravity="center_vertical">
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:src="@drawable/ic_pencil"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="글 쓰기"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
 

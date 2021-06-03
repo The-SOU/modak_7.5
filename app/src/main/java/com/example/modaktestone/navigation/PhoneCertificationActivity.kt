@@ -8,18 +8,25 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.example.modaktestone.MainActivity
 import com.example.modaktestone.databinding.ActivityHomepageViewBinding
 import com.example.modaktestone.databinding.ActivityPhoneCertificationBinding
+import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.android.bind
 import java.util.concurrent.TimeUnit
 
 class PhoneCertificationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPhoneCertificationBinding
+
+    var firestore: FirebaseFirestore? = null
+    var uid: String? = null
+    var item: UserDTO? = null
 
     //코드보내기 실패하면 재전송
     private var forceResendingToken: PhoneAuthProvider.ForceResendingToken? = null
@@ -39,6 +46,17 @@ class PhoneCertificationActivity : AppCompatActivity() {
         binding = ActivityPhoneCertificationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        firestore?.collection("users")?.document(uid!!)
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
+                item = documentSnapshot.toObject(UserDTO::class.java)
+            }
+
+        //초기화
+        firestore = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().currentUser?.uid
+
 
         binding.phoneLayout1.visibility = View.VISIBLE
         binding.phoneLayout2.visibility = View.GONE
@@ -87,7 +105,7 @@ class PhoneCertificationActivity : AppCompatActivity() {
         //전송하기 클릭
         binding.phoneBtnSend.setOnClickListener {
             //폰번호 넣기
-            val phone = binding.phoneEditPhonenumber.text.toString().trim()
+            val phone = "+82${binding.phoneEditPhonenumber.text.toString().trim()}"
             //validate phone number
             if (TextUtils.isEmpty(phone)) {
                 Toast.makeText(this@PhoneCertificationActivity, "휴대폰 번호를 넣어주세요", Toast.LENGTH_SHORT)
@@ -99,7 +117,7 @@ class PhoneCertificationActivity : AppCompatActivity() {
 
         //재전송 클릭
         binding.phoneBtnResend.setOnClickListener {
-            val phone = binding.phoneEditPhonenumber.text.toString().trim()
+            val phone = "+82${binding.phoneEditPhonenumber.text.toString().trim()}"
             //validate phone number
             if (TextUtils.isEmpty(phone)) {
                 Toast.makeText(this@PhoneCertificationActivity, "휴대폰 번호를 넣어주세요", Toast.LENGTH_SHORT)
@@ -166,8 +184,16 @@ class PhoneCertificationActivity : AppCompatActivity() {
             val phone = firebaseAuth.currentUser?.phoneNumber
             Toast.makeText(this, "Loged In as $phone", Toast.LENGTH_SHORT).show()
 
-            startActivity(Intent(this, SelectRegionActivity::class.java))
-            finish()
+            if (item == null) {
+                startActivity(Intent(this, SelectRegionActivity::class.java))
+                finish()
+                println("null")
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                println("not null")
+            }
+
         }.addOnFailureListener { e ->
             //로그인 실패
             processDialog.dismiss()
