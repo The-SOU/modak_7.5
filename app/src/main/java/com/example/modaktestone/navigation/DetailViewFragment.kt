@@ -31,6 +31,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_image_slide.view.*
 import kotlinx.android.synthetic.main.item_repeatboard.*
 import org.koin.android.ext.android.bind
+import java.text.SimpleDateFormat
 
 class DetailViewFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
@@ -66,6 +67,10 @@ class DetailViewFragment : Fragment() {
         //베스트게시글 어뎁터와 매니저
         binding.detailviewRecyclerviewBestcontent.adapter = BestContentRecyclerViewAdapter()
         binding.detailviewRecyclerviewBestcontent.layoutManager = LinearLayoutManager(this.context)
+
+        //실시간 인기글 게시판
+        binding.detailviewRecyclerviewHotcontent.adapter = HotContentRecyclerViewAdapter()
+        binding.detailviewRecyclerviewHotcontent.layoutManager = LinearLayoutManager(this.context)
 
         //지역 내 정보 어댑터와 매니저
         binding.detailviewRecyclerviewSociety.adapter = DetailSocietyRecyclerViewAdapter()
@@ -135,7 +140,6 @@ class DetailViewFragment : Fragment() {
             ViewPagerSecondAdapter(eventItem, eventTitle, eventContent)
         binding.viewPagerSecond.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.dotsIndicatorSecond.setViewPager2(binding.viewPagerSecond)
-
 
 
         //복지혜택 관련 아이템들
@@ -418,6 +422,94 @@ class DetailViewFragment : Fragment() {
         }
     }
 
+    inner class HotContentRecyclerViewAdapter :
+        RecyclerView.Adapter<HotContentRecyclerViewAdapter.CustomViewHolder>() {
+        var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
+
+        var contentUidList: ArrayList<String> = arrayListOf()
+
+        init {
+
+            firestore?.collection("contents")?.orderBy("timestamp", Query.Direction.DESCENDING)
+                ?.limit(10)?.orderBy("commentCount", Query.Direction.DESCENDING)?.limit(2)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    contentDTOs.clear()
+                    contentUidList.clear()
+                    if (documentSnapshot == null) return@addSnapshotListener
+                    for (snapshot in documentSnapshot.documents) {
+                        var item = snapshot.toObject(ContentDTO::class.java)
+                        contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
+                    }
+                    notifyDataSetChanged()
+                }
+
+
+        }
+
+        inner class CustomViewHolder(val binding: ItemBestcontentBinding) :
+            RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): HotContentRecyclerViewAdapter.CustomViewHolder {
+            val binding =
+                ItemBestcontentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return CustomViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(
+            holder: HotContentRecyclerViewAdapter.CustomViewHolder,
+            position: Int
+        ) {
+
+            holder.binding.itemBestcontentTvTitle.text = contentDTOs[position].title
+
+            holder.binding.itemBestcontentTvExplain.text = contentDTOs[position].explain
+
+            holder.binding.itemBestcontentTvUsername.text = contentDTOs[position].userName
+
+            holder.binding.itemBestcontentTvCommentcount.text =
+                contentDTOs[position].commentCount.toString()
+
+            holder.binding.itemBestcontentTvFavoritecount.text =
+                contentDTOs[position].favoriteCount.toString()
+
+            holder.binding.contentLinearLayout.setOnClickListener { v ->
+                var intent = Intent(v.context, DetailContentActivity::class.java)
+                if (contentDTOs[position].anonymity.containsKey(contentDTOs[position].uid)) {
+                    intent.putExtra("destinationUsername", "익명")
+                } else {
+                    intent.putExtra("destinationUsername", contentDTOs[position].userName)
+                }
+                intent.putExtra("destinationTitle", contentDTOs[position].title)
+                intent.putExtra("destinationExplain", contentDTOs[position].explain)
+                intent.putExtra(
+                    "destinationTimestamp",
+                    SimpleDateFormat("MM/dd HH:mm").format(contentDTOs[position].timestamp)
+                )
+                intent.putExtra(
+                    "destinationCommentCount",
+                    contentDTOs[position].commentCount.toString()
+                )
+                intent.putExtra(
+                    "destinationFavoriteCount",
+                    contentDTOs[position].favoriteCount.toString()
+                )
+                intent.putExtra("destinationUid", contentDTOs[position].uid)
+                intent.putExtra("destinationUid", contentDTOs[position].uid)
+                startActivity(intent)
+            }
+
+        }
+
+        override fun getItemCount(): Int {
+            return contentDTOs.size
+        }
+
+    }
+
 
     inner class BestContentRecyclerViewAdapter :
         RecyclerView.Adapter<BestContentRecyclerViewAdapter.CustomViewHolder>() {
@@ -693,6 +785,7 @@ class DetailViewFragment : Fragment() {
                 ItemPagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CustomViewHolder(binding)
         }
+
         override fun onBindViewHolder(
             holder: ViewPagerThirdAdapter.CustomViewHolder,
             position: Int
