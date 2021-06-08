@@ -73,7 +73,6 @@ class BoardContentActivity : AppCompatActivity() {
         ab.setDisplayShowTitleEnabled(false)
         ab.setDisplayShowCustomEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
-        ab.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -14,5 +14,6 @@
     <color name="grey">#535252</color>
     <color name="whitegrey">#919191</color>
     <color name="dots_color">#1AA780</color>
+    <color name="alarm_color">#BEEADD</color>
     <color name="navigation_select_color">#008577</color>
 </resources>

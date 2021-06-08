@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="예: 01011112222"
+            android:hint="휴대폰 번호(- 없이 숫자만 입력)"
             android:textSize="20sp"/>
 
         <Button
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="예: 123456"
+            android:hint="인증번호 입력"
             android:textSize="20sp"/>
 
         <TextView

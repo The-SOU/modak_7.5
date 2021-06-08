@@ -26,7 +26,6 @@ class PhoneCertificationActivity : AppCompatActivity() {
 
     var firestore: FirebaseFirestore? = null
     var uid: String? = null
-    var item: UserDTO? = null
 
     //코드보내기 실패하면 재전송
     private var forceResendingToken: PhoneAuthProvider.ForceResendingToken? = null
@@ -47,15 +46,13 @@ class PhoneCertificationActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        firestore?.collection("users")?.document(uid!!)
-            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if (documentSnapshot == null) return@addSnapshotListener
-                item = documentSnapshot.toObject(UserDTO::class.java)
-            }
+
 
         //초기화
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
+
+
 
 
         binding.phoneLayout1.visibility = View.VISIBLE
@@ -172,6 +169,8 @@ class PhoneCertificationActivity : AppCompatActivity() {
         processDialog.show()
 
         val credential = PhoneAuthProvider.getCredential(verificationId!!, code)
+
+
         signInWithPhoneAuthCredential(credential)
     }
 
@@ -184,15 +183,23 @@ class PhoneCertificationActivity : AppCompatActivity() {
             val phone = firebaseAuth.currentUser?.phoneNumber
             Toast.makeText(this, "Loged In as $phone", Toast.LENGTH_SHORT).show()
 
-            if (item == null) {
-                startActivity(Intent(this, SelectRegionActivity::class.java))
-                finish()
-                println("null")
-            } else {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-                println("not null")
-            }
+            firestore?.collection("users")?.document(uid!!)
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    if (documentSnapshot == null) return@addSnapshotListener
+                    var item = documentSnapshot.toObject(UserDTO::class.java)
+
+                    if (item == null) {
+                        startActivity(Intent(this, SelectRegionActivity::class.java))
+                        finish()
+                        println("null")
+                    } else {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                        println("not null")
+                    }
+                }
+
+
 
         }.addOnFailureListener { e ->
             //로그인 실패
