@@ -8,5 +8,6 @@ data class AlarmDTO(
     //1: 댓글달기
     var kind: Int? = null,
     var message: String? = null,
-    var timestamp: Long? = null
+    var timestamp: Long? = null,
+var contentUid : String? = null
 )

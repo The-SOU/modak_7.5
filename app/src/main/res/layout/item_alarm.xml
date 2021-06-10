@@ -44,28 +44,6 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_favorite" />
-
-            <TextView
-                android:id="@+id/alarm_tv_favoriteCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="0"
-                android:textColor="@color/whitegrey"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

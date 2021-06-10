@@ -1,5 +1,6 @@
 package com.example.modaktestone.navigation
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -46,6 +47,7 @@ class DetailContentActivity : AppCompatActivity() {
     var anonymityDTO = ContentDTO.Comment()
 
     private lateinit var myDialog: AlertDialog
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_detail_content)
@@ -97,10 +99,12 @@ class DetailContentActivity : AppCompatActivity() {
             if (anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)) {
                 anonymityDTO.anonymity.remove(auth?.currentUser?.uid)
                 binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_unanonymity)
+                binding.detailcontentTvAnonymity.setTextColor(R.color.whitegrey)
                 println("anonymity delete complete")
             } else {
                 anonymityDTO.anonymity[auth?.currentUser?.uid!!] = true
                 binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_anonymity)
+                binding.detailcontentTvAnonymity.setTextColor(R.color.dots_color)
                 println("anonymity add complete")
             }
         }
@@ -391,6 +395,7 @@ class DetailContentActivity : AppCompatActivity() {
                 alarmDTO.userName = userDTO?.userName
                 alarmDTO.kind = 0
                 alarmDTO.timestamp = System.currentTimeMillis()
+                alarmDTO.contentUid = contentUid
                 FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
                 FcmPush.instance.sendMessage(destinationUid, "hi", "good")
@@ -410,6 +415,7 @@ class DetailContentActivity : AppCompatActivity() {
                 alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
                 alarmDTO.kind = 1
                 alarmDTO.timestamp = System.currentTimeMillis()
+                alarmDTO.contentUid = contentUid
                 FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
             }
     }

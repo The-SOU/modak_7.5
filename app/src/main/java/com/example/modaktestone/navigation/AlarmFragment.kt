@@ -1,5 +1,6 @@
 package com.example.modaktestone.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.FragmentAlarmBinding
 import com.example.modaktestone.navigation.model.AlarmDTO
+import com.example.modaktestone.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.item_alarm.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
+import java.text.SimpleDateFormat
 
 class AlarmFragment : Fragment() {
     private var _binding: FragmentAlarmBinding? = null
     private val binding get() = _binding!!
+
+    var firestore: FirebaseFirestore? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,6 +31,9 @@ class AlarmFragment : Fragment() {
     ): View? {
         _binding = FragmentAlarmBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        //초기화
+        firestore = FirebaseFirestore.getInstance()
 
         binding.alarmfragmentRecyclerview.adapter = AlarmRecyclerViewAdapter()
         binding.alarmfragmentRecyclerview.layoutManager = LinearLayoutManager(this.activity)
@@ -50,9 +58,9 @@ class AlarmFragment : Fragment() {
             FirebaseFirestore.getInstance().collection("alarms").whereEqualTo("destinationUid", uid)
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     alarmDTOList.clear()
-                    if(querySnapshot == null)return@addSnapshotListener
+                    if (querySnapshot == null) return@addSnapshotListener
 
-                    for(snapshot in querySnapshot.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         alarmDTOList.add(snapshot.toObject(AlarmDTO::class.java)!!)
                     }
                     notifyDataSetChanged()
@@ -70,17 +78,57 @@ class AlarmFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             var view = holder.itemView
 
-            when(alarmDTOList[position].kind){
+            when (alarmDTOList[position].kind) {
                 //공감 알람일 때
                 0 -> {
                     val str_0 = alarmDTOList[position].userName + getString(R.string.alarm_favorite)
                     view.alarm_tv_content.text = str_0
+                    view.alarm_tv_timestamp.text =
+                        SimpleDateFormat("MM/dd HH:mm").format(alarmDTOList!![position].timestamp)
                 }
                 //댓글 알람일 때
                 1 -> {
                     val str_1 = alarmDTOList[position].userName + getString(R.string.alarm_comment)
                     view.alarm_tv_content.text = str_1
+                    view.alarm_tv_timestamp.text =
+                        SimpleDateFormat("MM/dd HH:mm").format(alarmDTOList!![position].timestamp)
+
                 }
+            }
+            //알림 클릭 시 해당페이지로 화면 이동
+            view.alarm_tv_content.setOnClickListener { v ->
+                firestore?.collection("contents")
+                    ?.document(alarmDTOList[position]!!.contentUid.toString())
+                    ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                        if (documentSnapshot == null) return@addSnapshotListener
+                        var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
+
+                        var intent = Intent(v.context, DetailContentActivity::class.java)
+                        if (contentDTO!!.anonymity.containsKey(contentDTO.uid)) {
+                            intent.putExtra("destinationUsername", "익명")
+                        } else {
+                            intent.putExtra("destinationUsername", contentDTO.userName)
+                        }
+                        intent.putExtra("destinationTitle", contentDTO.title)
+                        intent.putExtra("destinationExplain", contentDTO.explain)
+                        intent.putExtra(
+                            "destinationTimestamp",
+                            SimpleDateFormat("MM/dd HH:mm").format(contentDTO.timestamp)
+                        )
+                        intent.putExtra(
+                            "destinationCommentCount",
+                            contentDTO.commentCount.toString()
+                        )
+                        intent.putExtra(
+                            "destinationFavoriteCount",
+                            contentDTO.favoriteCount.toString()
+                        )
+                        intent.putExtra("destinationUid", contentDTO.uid)
+                        intent.putExtra("contentUid", alarmDTOList[position]!!.contentUid)
+                        startActivity(intent)
+
+
+                    }
             }
         }
 

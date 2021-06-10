@@ -50,9 +50,6 @@ class AccountFragment : Fragment() {
         currentUserUid = auth?.currentUser?.uid
         uid = arguments?.getString("destinationUid")
 
-        //어뎁터설정
-        binding.accountRecyclerview.adapter = AccountFragmentRecyclerViewAdapter()
-        binding.accountRecyclerview.layoutManager = LinearLayoutManager(this.context)
 
         //이름과 글 수 카운트
         getName()
