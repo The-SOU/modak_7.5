@@ -243,6 +243,10 @@ class DetailContentActivity : AppCompatActivity() {
             firestore?.runTransaction { transaction ->
                 println("7")
                 var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+                //게시글에에 코멘트 단사람의 uid 추가
+                contentDTO!!.comments[auth?.currentUser?.uid!!] = true
+
                 //익명으로 처음 댓글을 쓰는 거라면
                 if (!contentDTO!!.anonymityCommentList.containsKey(auth?.currentUser?.uid!!)) {
                     //리스트에 추가하고

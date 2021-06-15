@@ -6,19 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.LoginActivity
-import com.example.modaktestone.R
 import com.example.modaktestone.databinding.FragmentAccountBinding
 import com.example.modaktestone.databinding.ItemContentBinding
+import com.example.modaktestone.navigation.account.MyCommentActivity
+import com.example.modaktestone.navigation.account.MyContentActivity
+import com.example.modaktestone.navigation.account.MyFavoriteActivity
+import com.example.modaktestone.navigation.account.NoticeActivity
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import okio.blackholeSink
-import org.koin.android.ext.android.bind
 
 class AccountFragment : Fragment() {
     private var _binding: FragmentAccountBinding? = null
@@ -53,7 +53,7 @@ class AccountFragment : Fragment() {
 
         //이름과 글 수 카운트
         getName()
-//        getPostCount()
+        getPostCount()
 
         //로그아웃 버튼 클릭
         binding.accountBtnLogout.setOnClickListener {
@@ -61,6 +61,24 @@ class AccountFragment : Fragment() {
             startActivity(Intent(activity, LoginActivity::class.java))
             clearToken(currentUserUid!!)
             auth?.signOut()
+        }
+
+        //각 버튼 클릭
+        binding.accountBtnMyContent.setOnClickListener { v ->
+            var intent = Intent(v.context, MyContentActivity::class.java)
+            startActivity(intent)
+        }
+        binding.accountBtnMyComment.setOnClickListener { v ->
+            var intent = Intent(v.context, MyCommentActivity::class.java)
+            startActivity(intent)
+        }
+        binding.accountBtnMyFavorite.setOnClickListener { v ->
+            var intent = Intent(v.context, MyFavoriteActivity::class.java)
+            startActivity(intent)
+        }
+        binding.accountBtnNotice.setOnClickListener { v ->
+            var intent = Intent(v.context, NoticeActivity::class.java)
+            startActivity(intent)
         }
 
 

@@ -17,4 +17,5 @@
     <color name="alarm_color">#D5FBF0</color>
     <color name="navigation_select_color">#008577</color>
     <color name="account_division_color">#F3F3F3</color>
+    <color name="inquiry_background">#FF6BD3B6</color>
 </resources>

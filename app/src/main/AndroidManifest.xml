@@ -13,7 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".navigation.PhoneCertificationActivity"></activity>
+        <activity android:name=".navigation.account.NoticeDetailActivity"></activity>
+        <activity android:name=".navigation.account.NoticeActivity" />
+        <activity android:name=".navigation.administrator.UploadNoticeActivity" />
+        <activity android:name=".navigation.administrator.UploadInquiryActivity" />
+        <activity android:name=".navigation.account.InquiryDetailActivity" />
+        <activity android:name=".navigation.account.InquiryActivity" />
+        <activity android:name=".navigation.account.MyFavoriteActivity" />
+        <activity android:name=".navigation.account.MyCommentActivity" />
+        <activity android:name=".navigation.account.MyContentActivity" />
+        <activity android:name=".navigation.PhoneCertificationActivity" />
         <activity android:name=".navigation.HomeRegionActivity" />
         <activity android:name=".navigation.HomePageViewActivity" />
         <activity android:name=".navigation.InputActivity" />

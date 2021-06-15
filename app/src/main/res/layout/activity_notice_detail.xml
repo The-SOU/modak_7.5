@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".navigation.account.NoticeDetailActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/notice_textview_boardname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="공지사항"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/notice_detail_tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="모바일 커뮤니티 모닥이 출시했어요!"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/notice_detail_tv_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="2021.06.13"
+                    android:textColor="@color/whitegrey"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/colorDivision"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/notice_detail_tv_explain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="안녕하세요. 모바일 커뮤니티 모닥입니다. \n
+\n
+2021년 6월부로 출시 예정이었던 모닥이 드디어 출시가 되었습니다. \n
+\n
+본 어플리케이션은 현재 안드로이드 기반의 구글플레이에서 설치하실 수 있으며 전화번호로 간단하게 가입 및 로그인을 진행하실 수 있습니다.
+\n
+\n많은 관심 부탁드리며 앞으로 지속적인 업데이트로 여러분의 편의를 위해 힘차게 달려나가도록 하겠습니다.
+\n
+\n감사합니다."
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="normal" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

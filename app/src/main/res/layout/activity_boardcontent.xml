@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="수다게시판"
-            android:textSize="35sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
 
