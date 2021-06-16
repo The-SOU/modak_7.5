@@ -13,7 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".navigation.account.NoticeDetailActivity"></activity>
+        <activity android:name=".navigation.LaunchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity android:name=".navigation.account.NoticeDetailActivity" />
         <activity android:name=".navigation.account.NoticeActivity" />
         <activity android:name=".navigation.administrator.UploadNoticeActivity" />
         <activity android:name=".navigation.administrator.UploadInquiryActivity" />
@@ -33,11 +41,7 @@
         <activity android:name=".navigation.BoardContentActivity" />
         <activity android:name=".navigation.SelectRegionActivity" />
         <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
