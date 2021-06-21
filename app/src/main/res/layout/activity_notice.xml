@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:text="공지사항"
             android:textSize="30sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/spoqahansansneo_bold"
             android:textColor="@color/black"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -42,7 +42,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/img_inquiry_fifth"/>
+                    android:src="@drawable/img_notice"/>
 
             </LinearLayout>
 
@@ -83,6 +83,7 @@
                         android:text="글 쓰기"
                         android:textStyle="bold"
                         android:textSize="20sp"
+                        android:fontFamily="@font/spoqahansansneo_regular"
                         android:textColor="@color/white"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"/>

@@ -24,7 +24,7 @@
             android:text="XX님이 당신의 글에 댓글을 달았습니다."
             android:textColor="@color/black"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/spoqahansansneo_bold"/>
 
 
     </LinearLayout>
@@ -42,7 +42,7 @@
             android:text="02.23 17:23"
             android:textColor="@color/whitegrey"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/spoqahansansneo_bold"/>
 
     </LinearLayout>
 

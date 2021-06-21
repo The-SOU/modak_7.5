@@ -5,15 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.modaktestone.databinding.ActivityInquiryBinding
 import com.example.modaktestone.databinding.ActivityNoticeBinding
-import com.example.modaktestone.databinding.ItemInquiryBinding
 import com.example.modaktestone.databinding.ItemNoticeBinding
 import com.example.modaktestone.navigation.administrator.UploadNoticeActivity
-import com.example.modaktestone.navigation.model.InquiryDTO
 import com.example.modaktestone.navigation.model.NoticeDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -100,6 +98,8 @@ class NoticeActivity : AppCompatActivity() {
             holder: NoticeRecyclerViewAdapter.CustomViewHolder,
             position: Int
         ) {
+            holder.binding.itemInquiryAnswerStatus.visibility = View.GONE
+
             holder.binding.itemNoticeTvTitle.text = noticeDTOs[position].title
             holder.binding.itemNoticeTvTimestamp.text =
                 SimpleDateFormat("MM/dd HH:mm").format(noticeDTOs!![position].timestamp)

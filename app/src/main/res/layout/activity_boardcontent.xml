@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".navigation.BoardContentActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,71 +16,70 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="수다게시판"
+            android:textColor="@color/black"
             android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:fontFamily="@font/spoqahansansneo_bold" />
 
     </androidx.appcompat.widget.Toolbar>
-<LinearLayout
-    android:id="@+id/toolbar_division"
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_below="@id/my_toolbar"
-    android:background="@color/colorDivision"
-    android:orientation="horizontal"
-    />
+
+    <LinearLayout
+        android:id="@+id/toolbar_division"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/my_toolbar"
+        android:background="@color/colorDivision"
+        android:orientation="horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/boardcontent_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_division"
-        android:layout_marginTop="20dp"
-        >
+        android:layout_marginTop="20dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
         android:gravity="center"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/boardcontent_btn_upload"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:orientation="horizontal"
             android:background="@drawable/layout_dialog_radius"
-            android:backgroundTint="@color/dots_color" >
+            android:backgroundTint="@color/dots_color"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="3dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
-                android:layout_gravity="center_vertical">
+                android:orientation="horizontal">
+
                 <ImageView
                     android:layout_width="38dp"
                     android:layout_height="38dp"
-                    android:src="@drawable/ic_pencil"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_pencil" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="글 쓰기"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textColor="@color/white"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"/>
+                    android:layout_marginLeft="5dp"
+                    android:text="글 쓰기"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/spoqahansansneo_bold" />
 
             </LinearLayout>
 

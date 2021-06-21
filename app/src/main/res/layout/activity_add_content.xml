@@ -19,8 +19,8 @@
                 android:gravity="center"
                 android:text="글 쓰기"
                 android:textColor="@color/black"
-                android:textSize="35sp"
-                android:textStyle="bold" />
+                android:textSize="30sp"
+                android:fontFamily="@font/spoqahansansneo_bold" />
 
             <Button
                 android:id="@+id/addcontent_button_upload"
@@ -140,7 +140,8 @@
                 android:layout_marginLeft="5dp"
                 android:text="익명"
                 android:textColor="@color/whitegrey"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:fontFamily="@font/spoqahansansneo_regular"/>
 
 
         </LinearLayout>

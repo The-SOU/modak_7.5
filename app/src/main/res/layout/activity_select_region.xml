@@ -35,7 +35,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         />
 
     <Spinner
@@ -58,7 +58,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         />
 
     <Spinner
@@ -81,7 +81,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         />
 
     <Spinner
@@ -101,7 +101,7 @@
         android:textSize="25sp"
         android:layout_margin="10dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         />
 
     <EditText
@@ -132,6 +132,7 @@
             android:textSize="18sp"
             android:textColor="@color/white"
             android:background="@drawable/layout_dialog_radius"
+            android:fontFamily="@font/spoqahansansneo_bold"
             android:backgroundTint="@color/dots_color" />
     </LinearLayout>
 

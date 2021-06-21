@@ -16,7 +16,7 @@
         android:text="난 아이스크림이 좋아요"
         android:textColor="@color/black"
         android:textSize="30sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         android:maxLines="1"
         android:ellipsize="end"/>
 
@@ -31,6 +31,7 @@
         android:textSize="25sp"
         android:maxLines="1"
         android:ellipsize="end"
+        android:fontFamily="@font/spoqahansansneo_medium"
         />
 
     <RelativeLayout
@@ -54,14 +55,16 @@
                 android:layout_height="wrap_content"
                 android:text="2021.2.12 4:23"
                 android:textColor="@color/whitegrey"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/spoqahansansneo_medium"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ㅣ"
                 android:textColor="@color/whitegrey"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/spoqahansansneo_medium"/>
 
             <TextView
                 android:id="@+id/content_textview_username"
@@ -69,7 +72,8 @@
                 android:layout_height="wrap_content"
                 android:text="익명"
                 android:textColor="@color/whitegrey"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/spoqahansansneo_medium"/>
 
 
         </LinearLayout>
@@ -99,7 +103,8 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:fontFamily="@font/spoqahansansneo_medium"/>
 
             </LinearLayout>
 
@@ -122,7 +127,8 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:fontFamily="@font/spoqahansansneo_medium"/>
 
             </LinearLayout>
 

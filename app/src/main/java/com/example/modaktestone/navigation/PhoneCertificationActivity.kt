@@ -1,12 +1,14 @@
 package com.example.modaktestone.navigation
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.modaktestone.MainActivity
 import com.example.modaktestone.databinding.ActivityHomepageViewBinding
@@ -45,6 +47,11 @@ class PhoneCertificationActivity : AppCompatActivity() {
         binding = ActivityPhoneCertificationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        //키보드 사라지기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
 
 
 
@@ -206,6 +213,16 @@ class PhoneCertificationActivity : AppCompatActivity() {
             processDialog.dismiss()
             Toast.makeText(this, "${e.message}", Toast.LENGTH_SHORT).show()
 
+        }
+
+
+    }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 }

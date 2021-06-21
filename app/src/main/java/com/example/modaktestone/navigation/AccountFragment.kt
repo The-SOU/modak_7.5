@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.LoginActivity
 import com.example.modaktestone.databinding.FragmentAccountBinding
 import com.example.modaktestone.databinding.ItemContentBinding
-import com.example.modaktestone.navigation.account.MyCommentActivity
-import com.example.modaktestone.navigation.account.MyContentActivity
-import com.example.modaktestone.navigation.account.MyFavoriteActivity
-import com.example.modaktestone.navigation.account.NoticeActivity
+import com.example.modaktestone.navigation.account.*
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -78,6 +75,10 @@ class AccountFragment : Fragment() {
         }
         binding.accountBtnNotice.setOnClickListener { v ->
             var intent = Intent(v.context, NoticeActivity::class.java)
+            startActivity(intent)
+        }
+        binding.accountBtnInquiry.setOnClickListener { v ->
+            var intent = Intent(v.context, MyInquiryActivity::class.java)
             startActivity(intent)
         }
 

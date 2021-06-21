@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="2021"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansansneo_bold"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center_horizontal" />
 

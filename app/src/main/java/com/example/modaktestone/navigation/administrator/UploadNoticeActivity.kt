@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.modaktestone.databinding.ActivityUploadNoticeBinding
-import com.example.modaktestone.navigation.model.InquiryDTO
 import com.example.modaktestone.navigation.model.NoticeDTO
 import com.google.firebase.firestore.FirebaseFirestore
 

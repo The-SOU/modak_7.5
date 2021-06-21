@@ -5,9 +5,5 @@
         android:fontWeight = "400"
         android:font="@font/spoqahansansneo_bold"/>
 
-    <font
-        android:fontStyle = "normal"
-        android:fontWeight = "400"
-        android:font="@font/nanumgothic_extrabold"/>
 
 </font-family>

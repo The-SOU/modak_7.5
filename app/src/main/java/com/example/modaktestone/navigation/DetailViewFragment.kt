@@ -166,6 +166,14 @@ class DetailViewFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.detailviewBtnNotice.setOnClickListener { v ->
+            var intent = Intent(v.context, BoardContentActivity::class.java)
+            intent.putExtra("destinationCategory", "복지관 공지사항")
+            startActivity(intent)
+        }
+
+
+
         return view
     }
 

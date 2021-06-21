@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".navigation.account.AddInquiryActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="문의하기"
+            android:textSize="30sp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/addinquiry_btn_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="완료"
+            android:textSize="30sp"
+            android:layout_marginRight="20dp"
+            android:fontFamily="@font/spoqahansansneo_bold"
+            android:textColor="@color/dots_color"/>
+
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/addinquiry_edittext_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_division"
+        android:layout_margin="10dp"
+        android:hint="제목"
+        android:fontFamily="@font/spoqahansansneo_regular"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/addcontent_edittext_explain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addcontent_edittext_title"
+        android:layout_margin="10dp"
+        android:hint="문의 내용"
+        android:fontFamily="@font/spoqahansansneo_regular"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/spoqahansansneo_medium"
+        android:text="  서비스에 대한 문의 사항이나 제안을 접수받는 곳입니다.\n\n
+모닥 고객센터 답변 가능시간은 평일 오전 10시~오후 6시입니다. \n\n
+토/일/공휴일에는 답변이 불가한 점 참고바랍니다."
+        android:textSize="20sp"/>
+
+
+
+
+
+</LinearLayout>

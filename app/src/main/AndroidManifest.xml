@@ -13,20 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".navigation.WelfareNoticeActivity"></activity>
+        <activity android:name=".navigation.account.AddInquiryActivity" />
+        <activity android:name=".navigation.account.MyInquiryActivity" />
         <activity android:name=".navigation.LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".navigation.account.NoticeDetailActivity" />
         <activity android:name=".navigation.account.NoticeActivity" />
         <activity android:name=".navigation.administrator.UploadNoticeActivity" />
-        <activity android:name=".navigation.administrator.UploadInquiryActivity" />
-        <activity android:name=".navigation.account.InquiryDetailActivity" />
-        <activity android:name=".navigation.account.InquiryActivity" />
         <activity android:name=".navigation.account.MyFavoriteActivity" />
         <activity android:name=".navigation.account.MyCommentActivity" />
         <activity android:name=".navigation.account.MyContentActivity" />
@@ -40,9 +39,7 @@
         <activity android:name=".navigation.EditContentActivity" />
         <activity android:name=".navigation.BoardContentActivity" />
         <activity android:name=".navigation.SelectRegionActivity" />
-        <activity android:name=".LoginActivity">
-
-        </activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="com.example.modaktestone" />
