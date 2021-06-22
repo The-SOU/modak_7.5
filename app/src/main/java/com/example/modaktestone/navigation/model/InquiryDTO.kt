@@ -4,4 +4,4 @@ data class InquiryDTO(var inquire: String? = null,
                       var title: String? = null,
                       var explain: String? = null,
                       var timestamp: Long? = null,
-                      var answerCompleted: Int = 0)
+                      var answerCount: Int = 0)

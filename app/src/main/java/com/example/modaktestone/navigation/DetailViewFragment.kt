@@ -1,20 +1,13 @@
 package com.example.modaktestone.navigation
 
-import ZoomOutPageTransformer
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.FragmentDetailBinding
@@ -23,14 +16,11 @@ import com.example.modaktestone.databinding.ItemPagerBinding
 import com.example.modaktestone.databinding.ItemRepeatboardBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
-import com.example.modaktestone.navigation.viewPager.ImageSlideFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_image_slide.view.*
 import kotlinx.android.synthetic.main.item_repeatboard.*
-import org.koin.android.ext.android.bind
 import java.text.SimpleDateFormat
 
 class DetailViewFragment : Fragment() {
@@ -41,6 +31,7 @@ class DetailViewFragment : Fragment() {
     var firestore: FirebaseFirestore? = null
     var currentUserUid: String? = null
     var region: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +44,7 @@ class DetailViewFragment : Fragment() {
         //초기화
         firestore = FirebaseFirestore.getInstance()
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
         firestore?.collection("users")?.document(currentUserUid!!)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
@@ -193,6 +185,8 @@ class DetailViewFragment : Fragment() {
         var boardDTO: List<String> =
             listOf("자유게시판", "비밀게시판", "정보게시판", "건강게시판", "트로트게시판", "재취업게시판", "정치게시판")
 
+
+
         inner class CustomViewHolder(val binding: ItemRepeatboardBinding) :
             RecyclerView.ViewHolder(binding.root)
 
@@ -210,17 +204,13 @@ class DetailViewFragment : Fragment() {
             position: Int
         ) {
             holder.binding.itemRepeatboardTvBoardname.text = boardDTO[position]
-
+            println("what $region")
             when (boardDTO[position]) {
                 "자유게시판" -> {
                     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
-                    firestore?.collection("users")?.document(currentUserUid!!)
-                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            if (documentSnapshot == null) return@addSnapshotListener
-                            var regionDTO = documentSnapshot.toObject(UserDTO::class.java)
-                            firestore?.collection("contents")
-                                ?.whereEqualTo("region", regionDTO!!.region)
+                    firestore?.collection("contents")
+                                ?.whereEqualTo("region", region)
                                 ?.whereEqualTo("contentCategory", "자유게시판")
                                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                                     contentDTOs.clear()
@@ -239,7 +229,7 @@ class DetailViewFragment : Fragment() {
 
                                 }
 
-                        }
+
 
                 }
                 "비밀게시판" -> {

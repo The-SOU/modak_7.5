@@ -3,7 +3,6 @@ package com.example.modaktestone.navigation.account
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import com.example.modaktestone.databinding.ActivityInquiryDetailBinding
 import com.example.modaktestone.databinding.ActivityNoticeBinding
 import com.example.modaktestone.databinding.ActivityNoticeDetailBinding
 

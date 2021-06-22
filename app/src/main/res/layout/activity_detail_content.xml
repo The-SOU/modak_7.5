@@ -15,25 +15,6 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:gravity="center_vertical">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:src="@drawable/ic_arrow_back" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/detailcontent_btn_etc"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_alignParentRight="true"-->
-<!--                    android:src="@drawable/ic_etc"-->
-<!--                    android:layout_marginRight="20dp"/>-->
-
-<!--            </RelativeLayout>-->
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
@@ -85,7 +66,7 @@
                         android:text="익명"
                         android:textColor="@color/black"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/spoqahansansneo_medium" />
 
                     <TextView
                         android:id="@+id/detailcontent_textview_timestamp"
@@ -94,7 +75,7 @@
                         android:text="02.23 17:23"
                         android:textColor="@color/whitegrey"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/spoqahansansneo_medium" />
 
                 </LinearLayout>
 
@@ -119,7 +100,7 @@
                         android:text="좋아요"
                         android:textColor="@color/whitegrey"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/spoqahansansneo_medium" />
                 </LinearLayout>
 
             </RelativeLayout>
@@ -134,8 +115,8 @@
                 android:layout_marginRight="25dp"
                 android:text="제목입니다"
                 android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textSize="25sp"
+                android:fontFamily="@font/spoqahansansneo_bold" />
 
             <TextView
                 android:id="@+id/detailcontent_textview_explain"
@@ -148,17 +129,17 @@
                 android:text="이 밤 그 날의 반딧불을 당신의 창 가까이 보낼게요. 사랑한다는 말에요. 난 우리의 첫 입맛춤을 떠올려. 그럼 언제든 눈을 감고."
                 android:textColor="@color/black"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/spoqahansansneo_regular" />
 
             <ImageView
                 android:id="@+id/detailcontent_imageview_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 android:layout_below="@+id/detailcontent_textview_explain"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="25dp"
-                android:src="@drawable/ic_image" />
+                android:scaleType="fitXY"/>
 
             <LinearLayout
                 android:id="@+id/favoritelinear"
@@ -189,7 +170,7 @@
                         android:text="0"
                         android:textColor="@color/whitegrey"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/spoqahansansneo_bold" />
                 </LinearLayout>
 
 
@@ -212,7 +193,7 @@
                         android:text="0"
                         android:textColor="@color/whitegrey"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/spoqahansansneo_bold" />
                 </LinearLayout>
 
 
@@ -281,7 +262,7 @@
                     android:text="익명"
                     android:textColor="@color/whitegrey"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/spoqahansansneo_bold" />
             </LinearLayout>
 
             <EditText

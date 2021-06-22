@@ -1,14 +1,19 @@
 package com.example.modaktestone.navigation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.ActivityDetailContentBinding
 import com.example.modaktestone.databinding.ItemCommentBinding
@@ -34,6 +39,7 @@ class DetailContentActivity : AppCompatActivity() {
     var destinationFavoriteCount: Int? = 0
     var destinationUid: String? = null
     var contentUid: String? = null
+    var imageUrl: String? = null
 
     var editTitle: String? = null
     var editExplain: String? = null
@@ -47,6 +53,7 @@ class DetailContentActivity : AppCompatActivity() {
     var anonymityDTO = ContentDTO.Comment()
 
     private lateinit var myDialog: AlertDialog
+
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +68,7 @@ class DetailContentActivity : AppCompatActivity() {
         uid = FirebaseAuth.getInstance().currentUser?.uid
         destinationTitle = intent.getStringExtra("destinationTitle")
         destinationExplain = intent.getStringExtra("destinationExplain")
+        imageUrl = intent.getStringExtra("destinationImage")
 
 
         //컨텐츠 내용 띄우기
@@ -69,6 +77,13 @@ class DetailContentActivity : AppCompatActivity() {
         binding.detailcontentTextviewExplain.text = intent.getStringExtra("destinationExplain")
         binding.detailcontentTextviewTimestamp.text = intent.getStringExtra("destinationTimestamp")
         binding.detailcontentTvCommentcount.text = intent.getStringExtra("destinationCommentCount")
+        if(imageUrl!=null){
+            Glide.with(this).load("https://firebasestorage.googleapis.com/v0/b/modaktestone.appspot.com/o/images%2FIMAGE_20210622_201401_.png?alt=media&token=4f1c6234-70d1-4b69-9db0-b301b547c0a9).into(binding.detailcontentImageviewImage")
+            println("what $imageUrl")
+        }else{
+            binding.detailcontentImageviewImage.visibility = View.GONE
+        }
+        binding.detailcontentImageviewImage
         binding.detailcontentTvFavoritecount.text =
             intent.getStringExtra("destinationFavoriteCount")
         destinationUid = intent.getStringExtra("destinationUid")
@@ -161,7 +176,7 @@ class DetailContentActivity : AppCompatActivity() {
                 Toast.makeText(this, "해당 게시자를 신고하였습니다.", Toast.LENGTH_SHORT).show()
                 var reportIntent = Intent(this, ReportViewActivity::class.java)
                 reportIntent.putExtra("targetContent", contentUid)
-                reportIntent.putExtra("targetTitle", destinationTitle )
+                reportIntent.putExtra("targetTitle", destinationTitle)
                 reportIntent.putExtra("targetExplain", destinationExplain)
                 startActivity(reportIntent)
                 finish()
@@ -180,16 +195,20 @@ class DetailContentActivity : AppCompatActivity() {
         RecyclerView.Adapter<DetailContentRecycleViewAdapter.CustomViewHolder>() {
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
 
+        var commentUidList: ArrayList<String> = arrayListOf()
+
 
         init {
             FirebaseFirestore.getInstance().collection("contents").document(contentUid!!)
                 .collection("comments").orderBy("timestamp")
                 .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                     comments.clear()
+                    commentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
 
                     for (snapshot in querySnapshot.documents!!) {
                         comments.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
+                        commentUidList.add(snapshot.id)
                     }
                     notifyDataSetChanged()
                 }
@@ -223,6 +242,10 @@ class DetailContentActivity : AppCompatActivity() {
             holder.binding.commentitemTextviewComment.text = comments[position].comment
             holder.binding.commentitemTextviewTimestamp.text =
                 SimpleDateFormat("MM/dd HH:mm").format(comments[position].timestamp)
+
+            holder.binding.commentitemBtnEtc.setOnClickListener {
+                showPopup(commentUidList[position], comments[position].comment, contentUid!!, comments[position].uid!!)
+            }
 
         }
 
@@ -498,6 +521,67 @@ class DetailContentActivity : AppCompatActivity() {
             transaction.set(tsDoc, contentDTO)
             return@runTransaction
         }
+
+
+    }
+
+    private fun showPopup(commentUid: String?, destinationExplain: String?, contentUid: String, commentingWho: String) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.item_comment_etc, null)
+
+        val alertDialog = AlertDialog.Builder(this).create()
+
+        alertDialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+        //댓글 삭제
+        val btnRemove = view.findViewById<Button>(R.id.item_comment_etc_remove)
+
+
+        btnRemove.setOnClickListener {
+            firestore?.collection("contents")?.document(contentUid!!)?.collection("comments")
+                ?.document(commentUid!!)?.delete()?.addOnSuccessListener {
+                    Toast.makeText(this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                    var tsDoc = firestore?.collection("contents")?.document(contentUid)
+                    firestore?.runTransaction { transaction ->
+                        var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+                        if (contentDTO != null) {
+                            contentDTO?.commentCount = contentDTO?.commentCount!! - 1
+                        }
+                        transaction.set(tsDoc, contentDTO!!)
+                        return@runTransaction
+                    }
+                }
+            alertDialog.dismiss()
+        }
+
+        val btnReport = view.findViewById<Button>(R.id.item_comment_etc_report)
+        btnReport.setOnClickListener {
+            Toast.makeText(this, "해당 게시자를 신고하였습니다.", Toast.LENGTH_SHORT).show()
+            var reportIntent = Intent(this, ReportViewActivity::class.java)
+            reportIntent.putExtra("targetContent", contentUid)
+            reportIntent.putExtra("targetComment", commentUid)
+            reportIntent.putExtra("targetExplain", destinationExplain)
+            startActivity(reportIntent)
+            finish()
+        }
+
+        //댓글 취소
+        val btnCancel = view.findViewById<Button>(R.id.item_comment_etc_cancel)
+        btnCancel.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        if(uid==commentingWho){
+            btnRemove.visibility = View.VISIBLE
+            btnReport.visibility = View.GONE
+        } else {
+            btnRemove.visibility = View.GONE
+            btnReport.visibility = View.VISIBLE
+        }
+
+        alertDialog.setView(view)
+        alertDialog.show()
 
 
     }

@@ -67,7 +67,7 @@ class EditContentActivity : AppCompatActivity() {
 
         binding.addcontentImageviewImage.visibility = View.INVISIBLE
 
-        binding.addcontentButtonUpload.setOnClickListener {
+        binding.addcontentBtnUpload.setOnClickListener {
 
             contentEdit(anonymityDTO)
 

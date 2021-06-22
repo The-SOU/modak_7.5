@@ -102,7 +102,7 @@ class MyInquiryActivity : AppCompatActivity() {
             holder: MyInquiryRecyclerViewAdapter.CustomViewHolder,
             position: Int
         ) {
-            if(inquiryDTOs[position].answerCompleted==1){
+            if(inquiryDTOs[position].answerCount==1){
                 holder.binding.itemInquiryAnswerStatus.text = "<답변 완료>"
                 holder.binding.itemInquiryAnswerStatus.setTextColor(R.color.newcontent)
             }

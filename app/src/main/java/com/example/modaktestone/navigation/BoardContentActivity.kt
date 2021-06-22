@@ -178,6 +178,7 @@ class BoardContentActivity : AppCompatActivity() {
                 )
                 intent.putExtra("destinationUid", contentDTOs[position].uid)
                 intent.putExtra("contentUid", contentUidList[position])
+                intent.putExtra("destinationImage", contentDTOs[position].imageUrl)
                 startActivity(intent)
             }
 

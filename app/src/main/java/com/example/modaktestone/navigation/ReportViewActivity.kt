@@ -1,6 +1,8 @@
 package com.example.modaktestone.navigation
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -28,6 +30,7 @@ class ReportViewActivity : AppCompatActivity() {
     var targetContent: String? = null
     var targetTitle: String? = null
     var targetExplain: String? = null
+    var targetComment: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,7 @@ class ReportViewActivity : AppCompatActivity() {
         targetContent = intent.getStringExtra("targetContent")
         targetTitle = intent.getStringExtra("targetTitle")
         targetExplain = intent.getStringExtra("targetExplain")
+        targetComment = intent.getStringExtra("targetComment")
 
         //툴바
         val toolbar = binding.myToolbar
@@ -101,19 +105,19 @@ class ReportViewActivity : AppCompatActivity() {
             holder.binding.itemReportContent.setOnClickListener {
                 when(reportDTO[position]){
                     "- 게시판 성격에 부적절해요" -> {
-                        showPopup(uid, targetContent, targetTitle, targetExplain, 0)
+                        showPopup(uid, targetContent, targetComment, targetTitle, targetExplain, 0)
                     }
                     "- 욕설과 비하가 담겨있어요" -> {
-                        showPopup(uid, targetContent, targetTitle, targetExplain, 1)
+                        showPopup(uid, targetContent, targetComment, targetTitle, targetExplain, 1)
                     }
                     "- 상업광고 및 판매글이에요" -> {
-                        showPopup(uid, targetContent, targetTitle, targetExplain, 2)
+                        showPopup(uid, targetContent, targetComment, targetTitle, targetExplain, 2)
                     }
                     "- 음란물 및 불건전한 내용이 있어요"-> {
-                        showPopup(uid, targetContent, targetTitle, targetExplain, 3)
+                        showPopup(uid, targetContent, targetComment, targetTitle, targetExplain, 3)
                     }
                     "- 도배가 되어 있는 글이에요" -> {
-                        showPopup(uid, targetContent, targetTitle, targetExplain, 4)
+                        showPopup(uid, targetContent, targetComment, targetTitle, targetExplain, 4)
                     }
                 }
             }
@@ -125,12 +129,16 @@ class ReportViewActivity : AppCompatActivity() {
 
     }
 
-    private fun showPopup(uid: String?, content: String?, title: String?, explain: String?, kind: Int?) {
+    private fun showPopup(uid: String?, content: String?, comment: String?, title: String?, explain: String?, kind: Int?) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.item_custom_dialog, null)
 
 
         val alertDialog = AlertDialog.Builder(this).create()
+
+        alertDialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        //신고하기 버튼 클릭할 때
         val btnReport = view.findViewById<Button>(R.id.report_dialog_btn_report)
         btnReport.setOnClickListener {
             Toast.makeText(this, "신고하였습니다", Toast.LENGTH_SHORT).show()
@@ -138,6 +146,7 @@ class ReportViewActivity : AppCompatActivity() {
 
             reportDTO.uidWhoReported = uid
             reportDTO.targetContent = content
+            targetComment = comment
             reportDTO.title = title
             reportDTO.explain = explain
             reportDTO.kind = kind
@@ -152,6 +161,12 @@ class ReportViewActivity : AppCompatActivity() {
                 }?.addOnFailureListener { e ->
                     Log.w("TAG", "Error adding document", e)
                 }
+            alertDialog.dismiss()
+            finish()
+        }
+        //취소버튼 클릭할 때
+        val btnCancel = view.findViewById<Button>(R.id.report_dialog_btn_cancel)
+        btnCancel.setOnClickListener {
             alertDialog.dismiss()
             finish()
         }

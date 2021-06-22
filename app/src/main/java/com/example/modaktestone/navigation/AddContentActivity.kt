@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -64,7 +65,7 @@ class AddContentActivity : AppCompatActivity() {
 
         binding.addcontentImageviewImage.visibility = View.INVISIBLE
 
-        binding.addcontentButtonUpload.setOnClickListener {
+        binding.addcontentBtnUpload.setOnClickListener {
 
             contentUpload(anonymityDTO)
 
@@ -89,7 +90,25 @@ class AddContentActivity : AppCompatActivity() {
             }
         }
 
+        //액션바 설정
+        val toolbar = binding.myToolbar
+        setSupportActionBar(toolbar)
+        val ab = supportActionBar!!
+        ab.setDisplayShowTitleEnabled(false)
+        ab.setDisplayShowCustomEnabled(true)
+        ab.setDisplayHomeAsUpEnabled(true)
 
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

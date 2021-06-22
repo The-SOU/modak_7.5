@@ -190,7 +190,7 @@ class PhoneCertificationActivity : AppCompatActivity() {
             val phone = firebaseAuth.currentUser?.phoneNumber
             Toast.makeText(this, "Loged In as $phone", Toast.LENGTH_SHORT).show()
 
-            firestore?.collection("users")?.document(uid!!)
+            firestore?.collection("users")?.document(FirebaseAuth.getInstance().currentUser?.uid!!)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                     if (documentSnapshot == null) return@addSnapshotListener
                     var item = documentSnapshot.toObject(UserDTO::class.java)
