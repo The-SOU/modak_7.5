@@ -84,7 +84,7 @@ class InformationFragment : Fragment() {
                     var userDTO = documentSnapshot.toObject(UserDTO::class.java)
                     region = userDTO?.region
 
-                    firestore?.collection("contents")?.whereEqualTo("region", region)
+                    firestore?.collection("contents")
                         ?.whereEqualTo("contentCategory", "지역 내 정보")
                         ?.orderBy("timestamp")?.limit(3)
                         ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->

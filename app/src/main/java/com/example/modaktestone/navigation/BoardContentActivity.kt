@@ -59,6 +59,8 @@ class BoardContentActivity : AppCompatActivity() {
         binding.boardcontentRecyclerview.adapter = BoardContentRecyclerViewAdapter()
         binding.boardcontentRecyclerview.layoutManager = LinearLayoutManager(this)
 
+
+
         //글쓰기 버튼 클릭할 때
         binding.boardcontentBtnUpload.setOnClickListener { v ->
             var intent = Intent(v.context, AddContentActivity::class.java)
@@ -100,12 +102,12 @@ class BoardContentActivity : AppCompatActivity() {
                     if (documentSnapshot == null) return@addSnapshotListener
                     var userDTO = documentSnapshot.toObject(UserDTO::class.java)
                     region = userDTO?.region
-                    firestore?.collection("contents")?.whereEqualTo("region", region)
-                        ?.whereEqualTo("contentCategory", destinationCategory)
+                    firestore?.collection("contents")
+                        ?.whereEqualTo("contentCategory", destinationCategory)?.orderBy("timestamp", Query.Direction.DESCENDING)
                         ?.addSnapshotListener { querySnapshot, firebaseFirestoreExeption ->
+                            if (querySnapshot == null) return@addSnapshotListener
                             contentDTOs.clear()
                             contentUidList.clear()
-                            if (querySnapshot == null) return@addSnapshotListener
 
                             for (snapshot in querySnapshot!!.documents) {
                                 var item = snapshot.toObject(ContentDTO::class.java)

@@ -1,6 +1,7 @@
 package com.example.modaktestone.navigation
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -9,20 +10,22 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.ActivityAddContentBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
-import com.kakao.sdk.common.KakaoSdk.init
-import org.koin.android.ext.android.bind
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class AddContentActivity : AppCompatActivity() {
 
@@ -98,6 +101,11 @@ class AddContentActivity : AppCompatActivity() {
         ab.setDisplayShowCustomEnabled(true)
         ab.setDisplayHomeAsUpEnabled(true)
 
+        //키보드 숨기기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
+
 
     }
 
@@ -146,10 +154,13 @@ class AddContentActivity : AppCompatActivity() {
                 //이미지 유알아이가 존재 유뮤에 따라 구분
                 if (photoUri != null) {
                     //image uri가 존재할 때
-                    storageRef?.putFile(photoUri!!)
-                        ?.continueWith { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
-                            return@continueWith storageRef.downloadUrl
-                        }?.addOnCompleteListener { uri ->
+//                        storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+//                            return@continueWithTask storageRef.downloadUrl}?.
+
+                    storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+                        return@continueWithTask storageRef.downloadUrl}?.addOnCompleteListener {
+                        storageRef.downloadUrl
+                            .addOnSuccessListener(OnSuccessListener<Uri?> { uri ->
                                 var contentDTO = ContentDTO()
 
                                 contentDTO.imageUrl = uri.toString()
@@ -170,9 +181,9 @@ class AddContentActivity : AppCompatActivity() {
 
                                 contentDTO.postCount = contentDTO.postCount + 1
 
-                            if(anonymity.anonymity.containsKey(auth?.currentUser?.uid!!)){
-                                contentDTO.anonymity[auth?.currentUser?.uid!!] = true
-                            }
+                                if(anonymity.anonymity.containsKey(auth?.currentUser?.uid!!)){
+                                    contentDTO.anonymity[auth?.currentUser?.uid!!] = true
+                                }
 
                                 contentDTO.timestamp = System.currentTimeMillis()
 
@@ -188,6 +199,11 @@ class AddContentActivity : AppCompatActivity() {
                                 setResult(Activity.RESULT_OK)
 
                                 finish()
+                                var intent = Intent(this, BoardContentActivity::class.java)
+                                intent.putExtra("destinationCategory", selectedCategory)
+                                startActivity(intent)
+
+                            })
 
                         }
 
@@ -226,9 +242,19 @@ class AddContentActivity : AppCompatActivity() {
                         setResult(Activity.RESULT_OK)
 
                         finish()
-
+                    var intent = Intent(this, BoardContentActivity::class.java)
+                    intent.putExtra("destinationCategory", selectedCategory)
+                    startActivity(intent)
                 }
 
             }
+    }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }

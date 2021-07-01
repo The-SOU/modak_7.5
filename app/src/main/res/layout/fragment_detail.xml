@@ -15,10 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="지역"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="30sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/spoqahansansneo_bold"/>
 
     </androidx.appcompat.widget.Toolbar>
 

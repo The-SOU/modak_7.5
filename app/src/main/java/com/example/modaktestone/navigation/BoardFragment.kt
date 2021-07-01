@@ -10,10 +10,12 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.modaktestone.MainActivity
 import com.example.modaktestone.R
 import com.example.modaktestone.databinding.FragmentBoardBinding
 import com.example.modaktestone.databinding.ItemBoardBinding
 import com.example.modaktestone.databinding.ItemReportBinding
+import kotlinx.android.synthetic.main.activity_main.*
 
 class BoardFragment : Fragment() {
     private var _binding: FragmentBoardBinding? = null
@@ -25,7 +27,6 @@ class BoardFragment : Fragment() {
     ): View? {
         _binding = FragmentBoardBinding.inflate(inflater, container, false)
         val view = binding.root
-
 
         binding.boardfragmentRecyclerview.adapter = BoardRecyclerViewAdapter()
         binding.boardfragmentRecyclerview.layoutManager = LinearLayoutManager(this.context)
@@ -53,7 +54,7 @@ class BoardFragment : Fragment() {
     inner class BoardRecyclerViewAdapter :
         RecyclerView.Adapter<BoardRecyclerViewAdapter.CustomViewHolder>() {
         var busanDTO: List<String> =
-            listOf("자유게시판", "비밀게시판", "HOT게시판", "정보게시판", "건강게시판", "트로트게시판", "재취업게시판", "정치게시판")
+            listOf("자유게시판", "건강게시판", "재취업게시판", "트로트게시판", "정보게시판", "정치게시판", "비밀게시판")
 
         inner class CustomViewHolder(val binding: ItemReportBinding) :
             RecyclerView.ViewHolder(binding.root)

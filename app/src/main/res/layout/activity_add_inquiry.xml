@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".navigation.account.AddInquiryActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/layout">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -40,7 +41,7 @@
         android:id="@+id/addinquiry_edittext_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_division"
+        android:inputType="textNoSuggestions"
         android:layout_margin="10dp"
         android:hint="제목"
         android:fontFamily="@font/spoqahansansneo_regular"
@@ -50,7 +51,7 @@
         android:id="@+id/addcontent_edittext_explain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addcontent_edittext_title"
+        android:inputType="textNoSuggestions"
         android:layout_margin="10dp"
         android:hint="문의 내용"
         android:fontFamily="@font/spoqahansansneo_regular"

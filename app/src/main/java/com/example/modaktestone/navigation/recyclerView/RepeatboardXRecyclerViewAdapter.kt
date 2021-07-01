@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modaktestone.databinding.ItemRepeatboardBinding
 import com.example.modaktestone.navigation.BoardContentActivity
+import com.example.modaktestone.navigation.DetailViewFragment
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -248,6 +249,7 @@ class RepeatboardXRecyclerViewAdapter :
 
         holder.binding.itemRepeatboardTvBoardname.setOnClickListener { v ->
             var intent = Intent(v.context, BoardContentActivity::class.java)
+            var activity = DetailViewFragment()
             intent.putExtra("destinationCategory", boardDTO[position])
         }
 
@@ -256,4 +258,6 @@ class RepeatboardXRecyclerViewAdapter :
     override fun getItemCount(): Int {
         return boardDTO.size
     }
+
+
 }

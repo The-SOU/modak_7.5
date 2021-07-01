@@ -54,7 +54,6 @@ class PhoneCertificationActivity : AppCompatActivity() {
         }
 
 
-
         //초기화
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -207,7 +206,6 @@ class PhoneCertificationActivity : AppCompatActivity() {
                 }
 
 
-
         }.addOnFailureListener { e ->
             //로그인 실패
             processDialog.dismiss()
@@ -218,9 +216,9 @@ class PhoneCertificationActivity : AppCompatActivity() {
 
     }
 
-    fun hideKeyboard(){
+    fun hideKeyboard() {
         val view = this.currentFocus
-        if(view != null){
+        if (view != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }

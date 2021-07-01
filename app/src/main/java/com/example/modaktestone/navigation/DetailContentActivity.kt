@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -25,6 +27,7 @@ import com.example.modaktestone.navigation.util.Notification
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import retrofit2.http.Url
 import java.text.SimpleDateFormat
 
 
@@ -70,20 +73,19 @@ class DetailContentActivity : AppCompatActivity() {
         destinationExplain = intent.getStringExtra("destinationExplain")
         imageUrl = intent.getStringExtra("destinationImage")
 
-
         //컨텐츠 내용 띄우기
         binding.detailcontentTextviewUsername.text = intent.getStringExtra("destinationUsername")
         binding.detailcontentTextviewTitle.text = intent.getStringExtra("destinationTitle")
         binding.detailcontentTextviewExplain.text = intent.getStringExtra("destinationExplain")
         binding.detailcontentTextviewTimestamp.text = intent.getStringExtra("destinationTimestamp")
         binding.detailcontentTvCommentcount.text = intent.getStringExtra("destinationCommentCount")
-        if(imageUrl!=null){
-            Glide.with(this).load("https://firebasestorage.googleapis.com/v0/b/modaktestone.appspot.com/o/images%2FIMAGE_20210622_201401_.png?alt=media&token=4f1c6234-70d1-4b69-9db0-b301b547c0a9).into(binding.detailcontentImageviewImage")
+        binding.detailcontentTvCommentcountSecond.text = intent.getStringExtra("destinationCommentCount")
+        if (imageUrl != null) {
+            Glide.with(this).load(intent.getStringExtra("destinationImage")).into(binding.detailcontentImageviewImage)
             println("what $imageUrl")
-        }else{
+        } else {
             binding.detailcontentImageviewImage.visibility = View.GONE
         }
-        binding.detailcontentImageviewImage
         binding.detailcontentTvFavoritecount.text =
             intent.getStringExtra("destinationFavoriteCount")
         destinationUid = intent.getStringExtra("destinationUid")
@@ -136,6 +138,10 @@ class DetailContentActivity : AppCompatActivity() {
         binding.detailcontentRecyclerview.adapter = DetailContentRecycleViewAdapter()
         binding.detailcontentRecyclerview.layoutManager = LinearLayoutManager(this)
 
+        //키보드 숨기기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
 
     }
 
@@ -244,8 +250,20 @@ class DetailContentActivity : AppCompatActivity() {
                 SimpleDateFormat("MM/dd HH:mm").format(comments[position].timestamp)
 
             holder.binding.commentitemBtnEtc.setOnClickListener {
-                showPopup(commentUidList[position], comments[position].comment, contentUid!!, comments[position].uid!!)
+                showPopup(
+                    commentUidList[position],
+                    comments[position].comment,
+                    contentUid!!,
+                    comments[position].uid!!
+                )
             }
+
+            //댓글 좋아요 버튼 클릭할 때
+            holder.binding.commentitemBtnFavorite.setOnClickListener {
+                favoriteCommentEvent(contentUid!!, commentUidList[position])
+            }
+
+            holder.binding.commentitemTextviewFavoritecount.text = comments[position].favoriteCount.toString()
 
         }
 
@@ -336,27 +354,41 @@ class DetailContentActivity : AppCompatActivity() {
             }
         } else {
             //익명체크가 안되어 있다면.
-            firestore?.collection("users")?.document(uid!!)
-                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                    if (documentSnapshot == null) return@addSnapshotListener
-                    println("5")
-                    var userDTO = documentSnapshot.toObject(UserDTO::class.java)
-                    username = userDTO?.userName
-                    region = userDTO?.region
+            var tsDoc = firestore?.collection("contents")?.document(contentUid!!)
+            firestore?.runTransaction { transaction ->
+                println("7")
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
 
-                    var comment = ContentDTO.Comment()
+                contentDTO!!.comments[auth?.currentUser?.uid!!] = true
 
-                    comment.uid = FirebaseAuth.getInstance().currentUser?.uid
-                    comment.comment = binding.detailcontentEdittextComment.text.toString()
-                    comment.timestamp = System.currentTimeMillis()
-                    comment.userName = username
+                firestore?.collection("users")?.document(uid!!)
+                    ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                        if (documentSnapshot == null) return@addSnapshotListener
+                        println("5")
+                        var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+                        username = userDTO?.userName
+                        region = userDTO?.region
 
-                    FirebaseFirestore.getInstance().collection("contents")
-                        .document(contentUid!!)
-                        .collection("comments").document().set(comment)
+                        var comment = ContentDTO.Comment()
 
-                    binding.detailcontentEdittextComment.setText("")
-                }
+                        comment.uid = FirebaseAuth.getInstance().currentUser?.uid
+                        comment.comment = binding.detailcontentEdittextComment.text.toString()
+                        comment.timestamp = System.currentTimeMillis()
+                        comment.userName = username
+
+                        FirebaseFirestore.getInstance().collection("contents")
+                            .document(contentUid!!)
+                            .collection("comments").document().set(comment)
+
+                        binding.detailcontentEdittextComment.setText("")
+                    }
+
+                transaction.set(tsDoc, contentDTO)
+                return@runTransaction
+
+            }
+
+
         }
 
 
@@ -368,6 +400,14 @@ class DetailContentActivity : AppCompatActivity() {
                 if (documentSnapshot == null) return@addSnapshotListener
                 var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
                 binding.detailcontentTvFavoritecount.text = contentDTO?.favoriteCount.toString()
+            }
+    }
+
+    fun getCommentFavorite(contentUid: String, commentUid: String) {
+        var tsDoc = firestore?.collection("contents")?.document(contentUid)?.collection("comments")
+            ?.document(commentUid)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                var commentDTO = documentSnapshot?.toObject(ContentDTO.Comment::class.java)
+
             }
     }
 
@@ -389,6 +429,27 @@ class DetailContentActivity : AppCompatActivity() {
             return@runTransaction
         }
     }
+
+    fun favoriteCommentEvent(contentUid: String, commentUid: String) {
+        var tsDoc = firestore?.collection("contents")?.document(contentUid)?.collection("comments")
+            ?.document(commentUid)
+        firestore?.runTransaction { transaction ->
+            var commentDTO = transaction.get(tsDoc!!).toObject(ContentDTO.Comment::class.java)
+            //만약 현재 유저 유아디가 페이버릿을 누른적이 있따면
+            if (commentDTO!!.favorites.containsKey(uid)) {
+                commentDTO?.favoriteCount = commentDTO?.favoriteCount - 1
+                commentDTO?.favorites.remove(uid)
+            } else {
+                //현재 유저가 페이버릿 누른적이 없다면
+                commentDTO?.favoriteCount = commentDTO?.favoriteCount + 1
+                commentDTO?.favorites[uid!!] = true
+                favoriteAlarm(destinationUid!!)
+            }
+            transaction.set(tsDoc, commentDTO)
+            return@runTransaction
+        }
+    }
+
 
     fun requestCommentCount(contentUid: String) {
         var tsDoc = firestore?.collection("contents")?.document(contentUid)
@@ -525,7 +586,12 @@ class DetailContentActivity : AppCompatActivity() {
 
     }
 
-    private fun showPopup(commentUid: String?, destinationExplain: String?, contentUid: String, commentingWho: String) {
+    private fun showPopup(
+        commentUid: String?,
+        destinationExplain: String?,
+        contentUid: String,
+        commentingWho: String
+    ) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.item_comment_etc, null)
 
@@ -547,6 +613,7 @@ class DetailContentActivity : AppCompatActivity() {
                         var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
                         if (contentDTO != null) {
                             contentDTO?.commentCount = contentDTO?.commentCount!! - 1
+                            contentDTO.comments.remove(uid)
                         }
                         transaction.set(tsDoc, contentDTO!!)
                         return@runTransaction
@@ -572,7 +639,7 @@ class DetailContentActivity : AppCompatActivity() {
             alertDialog.dismiss()
         }
 
-        if(uid==commentingWho){
+        if (uid == commentingWho) {
             btnRemove.visibility = View.VISIBLE
             btnReport.visibility = View.GONE
         } else {
@@ -584,6 +651,14 @@ class DetailContentActivity : AppCompatActivity() {
         alertDialog.show()
 
 
+    }
+
+    fun hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
 

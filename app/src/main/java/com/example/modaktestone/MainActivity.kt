@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.modaktestone.databinding.ActivityMainBinding
 import com.example.modaktestone.navigation.*
 import com.example.modaktestone.navigation.model.PushDTO
+import com.example.modaktestone.navigation.model.UserDTO
 import com.example.modaktestone.navigation.util.FcmPush
 import com.google.android.gms.common.api.Response
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,6 +27,8 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
+    var firestore: FirebaseFirestore? = null
+
     private val FCM_API = "https://fcm.googleapis.com/fcm/send"
     private val serverKey =
         "key=" + "Enter your Key"
@@ -36,6 +39,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val view = binding.root
         setContentView(view)
 
+        firestore = FirebaseFirestore.getInstance()
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
 
@@ -43,25 +47,22 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         binding.bottomNavigation.itemIconTintList = null
 
-
-
         retrieveAndStoreToken()
-
 
     }
 
-    private fun retrieveAndStoreToken(){
+    private fun retrieveAndStoreToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if(task.isSuccessful){
+            if (task.isSuccessful) {
                 val token: String? = task.result
 
                 val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
 
-                FirebaseDatabase.getInstance().getReference("tokens").child(userId!!).setValue(token)
+                FirebaseDatabase.getInstance().getReference("tokens").child(userId!!)
+                    .setValue(token)
             }
         }
     }
-
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

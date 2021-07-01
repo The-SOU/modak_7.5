@@ -1,10 +1,12 @@
 package com.example.modaktestone.navigation.account
 
 import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import com.example.modaktestone.databinding.ActivityAddInquiryBinding
 import com.example.modaktestone.navigation.model.InquiryDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +43,11 @@ class AddInquiryActivity : AppCompatActivity() {
             inquiryUpload()
         }
 
+        //키보드 숨기기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -74,6 +81,14 @@ class AddInquiryActivity : AppCompatActivity() {
 
         finish()
 
+    }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
 }

@@ -13,34 +13,58 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".navigation.WelfareNoticeActivity"></activity>
-        <activity android:name=".navigation.account.AddInquiryActivity" />
-        <activity android:name=".navigation.account.MyInquiryActivity" />
-        <activity android:name=".navigation.LaunchActivity">
+        <activity android:name=".navigation.WelfareNoticeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".navigation.account.AddInquiryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.account.MyInquiryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.LaunchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".navigation.account.NoticeDetailActivity" />
-        <activity android:name=".navigation.account.NoticeActivity" />
-        <activity android:name=".navigation.administrator.UploadNoticeActivity" />
-        <activity android:name=".navigation.account.MyFavoriteActivity" />
-        <activity android:name=".navigation.account.MyCommentActivity" />
-        <activity android:name=".navigation.account.MyContentActivity" />
-        <activity android:name=".navigation.PhoneCertificationActivity" />
-        <activity android:name=".navigation.HomeRegionActivity" />
-        <activity android:name=".navigation.HomePageViewActivity" />
-        <activity android:name=".navigation.InputActivity" />
-        <activity android:name=".navigation.ReportViewActivity" />
-        <activity android:name=".navigation.DetailContentActivity" />
-        <activity android:name=".navigation.AddContentActivity" />
-        <activity android:name=".navigation.EditContentActivity" />
-        <activity android:name=".navigation.BoardContentActivity" />
-        <activity android:name=".navigation.SelectRegionActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".navigation.account.NoticeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.account.NoticeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.administrator.UploadNoticeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.account.MyFavoriteActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.account.MyCommentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.account.MyContentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.PhoneCertificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.HomeRegionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.HomePageViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.InputActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.ReportViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.DetailContentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.AddContentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity android:name=".navigation.EditContentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.BoardContentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".navigation.SelectRegionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.modaktestone" />
 

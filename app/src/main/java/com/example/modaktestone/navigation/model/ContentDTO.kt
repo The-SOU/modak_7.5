@@ -24,7 +24,7 @@ data class ContentDTO(
         var comment: String? = null,
         var timestamp: Long? = null,
         var favoriteCount: Int = 0,
-        var favorites: Map<String, Boolean> = HashMap(),
+        var favorites: MutableMap<String, Boolean> = HashMap(),
         var anonymity: MutableMap<String, Boolean> = HashMap(),
         var anonymityName: String? = null,
         var anonymityCount: Int = 1

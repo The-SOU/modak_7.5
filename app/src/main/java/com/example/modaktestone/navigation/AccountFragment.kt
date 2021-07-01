@@ -55,7 +55,7 @@ class AccountFragment : Fragment() {
         //로그아웃 버튼 클릭
         binding.accountBtnLogout.setOnClickListener {
             activity?.finish()
-            startActivity(Intent(activity, LoginActivity::class.java))
+            startActivity(Intent(activity, LaunchActivity::class.java))
             clearToken(currentUserUid!!)
             auth?.signOut()
         }
@@ -152,12 +152,16 @@ class AccountFragment : Fragment() {
     }
 
     fun getPostCount() {
-        firestore?.collection("contents")?.document(currentUserUid!!)
-            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if(documentSnapshot == null)return@addSnapshotListener
-                var postDTO = documentSnapshot.toObject(ContentDTO::class.java)
-                binding.accountTvPostcount.text = postDTO?.postCount.toString()
-
+        var postDTOs: ArrayList<ContentDTO> = arrayListOf()
+        firestore?.collection("contents")?.whereEqualTo("uid", currentUserUid)
+            ?.addSnapshotListener { querySnapshot, firebaseFirestoreExeption ->
+                if(querySnapshot == null)return@addSnapshotListener
+                postDTOs.clear()
+                for(snapshot in querySnapshot.documents){
+                    var item = snapshot.toObject(ContentDTO::class.java)
+                    postDTOs.add(item!!)
+                    binding.accountTvPostcount.text = postDTOs.size.toString()
+                }
             }
     }
 

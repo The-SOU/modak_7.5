@@ -1,10 +1,12 @@
 package com.example.modaktestone.navigation
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
@@ -48,6 +50,13 @@ class SelectRegionActivity : AppCompatActivity() {
         setupSpinnerSex()
         setupSpinnerBirth()
         setupSpinnerHandler()
+
+        //키보드 숨기기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
+
+
 
 
     }
@@ -191,6 +200,14 @@ class SelectRegionActivity : AppCompatActivity() {
     fun moveMainPage() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
 

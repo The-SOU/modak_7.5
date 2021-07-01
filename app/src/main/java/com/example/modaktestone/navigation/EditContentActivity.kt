@@ -1,6 +1,7 @@
 package com.example.modaktestone.navigation
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.modaktestone.R
@@ -92,7 +94,10 @@ class EditContentActivity : AppCompatActivity() {
             }
         }
 
-
+        //키보드 숨기기
+        binding.layout.setOnClickListener {
+            hideKeyboard()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -160,5 +165,13 @@ class EditContentActivity : AppCompatActivity() {
 
         }
         finish()
+    }
+
+    fun hideKeyboard(){
+        val view = this.currentFocus
+        if(view != null){
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
