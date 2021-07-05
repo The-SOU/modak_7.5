@@ -1,10 +1,12 @@
 package com.example.modaktestone.navigation
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +19,7 @@ import com.example.modaktestone.R
 import com.example.modaktestone.databinding.ActivityAddContentBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
+import com.example.modaktestone.navigation.util.ProgressDialogSecond
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -40,11 +43,19 @@ class AddContentActivity : AppCompatActivity() {
     var firestore: FirebaseFirestore? = null
     var anonymityDTO = ContentDTO()
 
+    private lateinit var customProgressDialog: ProgressDialogSecond
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddContentBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        //로딩창 객체 생성
+        customProgressDialog = ProgressDialogSecond(this)
+        //로딩창을 투명하게
+        customProgressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customProgressDialog.setCanceledOnTouchOutside(false)
 
         //인텐트 값 받기
         if (intent.hasExtra("selectedCategory")) {
@@ -69,11 +80,7 @@ class AddContentActivity : AppCompatActivity() {
         binding.addcontentImageviewImage.visibility = View.INVISIBLE
 
         binding.addcontentBtnUpload.setOnClickListener {
-
             contentUpload(anonymityDTO)
-
-            //username, region 얻기.
-
         }
 
         //익명 버튼 클릭시
@@ -134,6 +141,7 @@ class AddContentActivity : AppCompatActivity() {
 
     // ----- 펑션 모음 -----
     fun contentUpload(anonymity: ContentDTO) {
+        customProgressDialog.show()
         println(anonymity.anonymity.toString())
         var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         var imageFileName = "IMAGE_" + timestamp + "_.png"
@@ -245,6 +253,7 @@ class AddContentActivity : AppCompatActivity() {
                     var intent = Intent(this, BoardContentActivity::class.java)
                     intent.putExtra("destinationCategory", selectedCategory)
                     startActivity(intent)
+
                 }
 
             }

@@ -78,7 +78,7 @@ class BoardFragment : Fragment() {
 
             holder.binding.itemReportContent.setTypeface(holder.binding.itemReportContent.typeface, Typeface.BOLD)
 
-            holder.binding.itemReportContent.setOnClickListener { v ->
+            holder.binding.layout.setOnClickListener { v ->
                 var intent = Intent(v.context, BoardContentActivity::class.java)
                 intent.putExtra("destinationCategory", busanDTO[position])
                 startActivity(intent)

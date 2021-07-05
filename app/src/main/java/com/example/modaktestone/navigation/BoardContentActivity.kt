@@ -1,6 +1,9 @@
 package com.example.modaktestone.navigation
 
+import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +19,7 @@ import com.example.modaktestone.databinding.ActivityBoardcontentBinding
 import com.example.modaktestone.databinding.ItemContentBinding
 import com.example.modaktestone.navigation.model.ContentDTO
 import com.example.modaktestone.navigation.model.UserDTO
+import com.example.modaktestone.navigation.util.ProgressDialogSecond
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -33,7 +37,6 @@ class BoardContentActivity : AppCompatActivity() {
     var destinationCategory: String? = null
 
     var region: String? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

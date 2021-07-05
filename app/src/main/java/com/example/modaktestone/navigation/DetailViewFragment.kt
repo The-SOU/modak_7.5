@@ -26,6 +26,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_image_slide.view.*
 import kotlinx.android.synthetic.main.item_repeatboard.*
+import java.text.SimpleDateFormat
 
 
 class DetailViewFragment : Fragment() {
@@ -367,15 +368,20 @@ class DetailViewFragment : Fragment() {
         RecyclerView.Adapter<BestContentRecyclerViewAdapter.CustomViewHolder>() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
 
+        var contentUidList: ArrayList<String> = arrayListOf()
+
         init {
             firestore?.collection("contents")?.orderBy("favoriteCount", Query.Direction.DESCENDING)
                 ?.limit(2)
                 ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                     contentDTOs.clear()
+                    contentUidList.clear()
+
                     if (documentSnapshot == null) return@addSnapshotListener
                     for (snapshot in documentSnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
                     }
                     notifyDataSetChanged()
                 }
@@ -399,21 +405,42 @@ class DetailViewFragment : Fragment() {
             holder: BestContentRecyclerViewAdapter.CustomViewHolder,
             position: Int
         ) {
-            holder.binding.itemBestcontentTvTitle.text = contentDTOs[position].title
+            val safePosition = holder.adapterPosition
+            holder.binding.itemBestcontentTvTitle.text = contentDTOs[safePosition].title
 
-            holder.binding.itemBestcontentTvExplain.text = contentDTOs[position].explain
+            holder.binding.itemBestcontentTvExplain.text = contentDTOs[safePosition].explain
 
-            holder.binding.itemBestcontentTvUsername.text = contentDTOs[position].userName
+            holder.binding.itemBestcontentTvUsername.text = contentDTOs[safePosition].userName
 
             holder.binding.itemBestcontentTvCommentcount.text =
-                contentDTOs[position].commentCount.toString()
+                contentDTOs[safePosition].commentCount.toString()
 
             holder.binding.itemBestcontentTvFavoritecount.text =
-                contentDTOs[position].favoriteCount.toString()
+                contentDTOs[safePosition].favoriteCount.toString()
 
             holder.binding.contentLinearLayout.setOnClickListener { v ->
-                var intent = Intent(v.context, BoardContentActivity::class.java)
-                intent.putExtra("destinationCategory", contentDTOs[position].contentCategory)
+                var intent = Intent(v.context, DetailContentActivity::class.java)
+                if (contentDTOs[safePosition].anonymity.containsKey(contentDTOs[safePosition].uid)) {
+                    intent.putExtra("destinationUsername", "익명")
+                } else {
+                    intent.putExtra("destinationUsername", contentDTOs[safePosition].userName)
+                }
+                intent.putExtra("destinationTitle", contentDTOs[safePosition].title)
+                intent.putExtra("destinationExplain", contentDTOs[safePosition].explain)
+                intent.putExtra(
+                    "destinationTimestamp",
+                    SimpleDateFormat("MM/dd HH:mm").format(contentDTOs[safePosition].timestamp)
+                )
+                intent.putExtra(
+                    "destinationCommentCount",
+                    contentDTOs[safePosition].commentCount.toString()
+                )
+                intent.putExtra(
+                    "destinationFavoriteCount",
+                    contentDTOs[safePosition].favoriteCount.toString()
+                )
+                intent.putExtra("destinationUid", contentDTOs[safePosition].uid)
+                intent.putExtra("contentUid", contentUidList[safePosition])
                 startActivity(intent)
             }
         }

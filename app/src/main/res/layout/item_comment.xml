@@ -15,7 +15,7 @@
             android:layout_width="37dp"
             android:layout_height="37dp"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_anonymity" />
+            android:src="@drawable/ic_profile" />
 
         <TextView
             android:id="@+id/commentitem_textview_username"

@@ -97,11 +97,12 @@ class DetailContentActivity : AppCompatActivity() {
         //댓글업로드 클릭 되었을 때
         binding.detailcontentBtnCommentupload.setOnClickListener {
             println("2")
-            commentUpload(anonymityDTO)
+            commentUpload()
             requestCommentCount(contentUid!!)
             getCommentCount(contentUid!!)
             commentAlarm(destinationUid!!, binding.detailcontentEdittextComment.text.toString())
             sendNotificationComment(destinationUid!!)
+            hideKeyboard()
         }
 
         //좋아요 버튼 클릭되었을 때
@@ -112,19 +113,19 @@ class DetailContentActivity : AppCompatActivity() {
         }
 
         //댓글창 익명버튼 클릭했을 시
-        binding.detailcontentBtnAnonymity.setOnClickListener {
-            if (anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)) {
-                anonymityDTO.anonymity.remove(auth?.currentUser?.uid)
-                binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_unanonymity)
-                binding.detailcontentTvAnonymity.setTextColor(R.color.whitegrey)
-                println("anonymity delete complete")
-            } else {
-                anonymityDTO.anonymity[auth?.currentUser?.uid!!] = true
-                binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_anonymity)
-                binding.detailcontentTvAnonymity.setTextColor(R.color.dots_color)
-                println("anonymity add complete")
-            }
-        }
+//        binding.detailcontentBtnAnonymity.setOnClickListener {
+//            if (anonymityDTO.anonymity.containsKey(auth?.currentUser?.uid)) {
+//                anonymityDTO.anonymity.remove(auth?.currentUser?.uid)
+//                binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_unanonymity)
+//                binding.detailcontentTvAnonymity.setTextColor(R.color.whitegrey)
+//                println("anonymity delete complete")
+//            } else {
+//                anonymityDTO.anonymity[auth?.currentUser?.uid!!] = true
+//                binding.detailcontentImageviewAnonymitybtn.setImageResource(R.drawable.ic_anonymity)
+//                binding.detailcontentTvAnonymity.setTextColor(R.color.dots_color)
+//                println("anonymity add complete")
+//            }
+//        }
 
         //findViewById(R.id.my_toolbar)
         val toolbar = binding.myToolbar
@@ -139,7 +140,11 @@ class DetailContentActivity : AppCompatActivity() {
         binding.detailcontentRecyclerview.layoutManager = LinearLayoutManager(this)
 
         //키보드 숨기기
-        binding.layout.setOnClickListener {
+        binding.detailcontentLayout.setOnClickListener {
+            hideKeyboard()
+        }
+
+        binding.scrollview.setOnClickListener {
             hideKeyboard()
         }
 
@@ -273,101 +278,26 @@ class DetailContentActivity : AppCompatActivity() {
 
     }
 
-    fun commentUpload(anonymity: ContentDTO.Comment) {
+    fun commentUpload() {
         var uid = auth?.currentUser?.uid
         var username: String? = null
-        var region: String? = null
-
-        //익명 체크가 되었다
-        if (anonymity.anonymity.containsKey(auth?.currentUser?.uid)) {
             var tsDoc = firestore?.collection("contents")?.document(contentUid!!)
             firestore?.runTransaction { transaction ->
-                println("7")
+                println("Comment_signal")
                 var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
-
-                //게시글에에 코멘트 단사람의 uid 추가
                 contentDTO!!.comments[auth?.currentUser?.uid!!] = true
 
-                //익명으로 처음 댓글을 쓰는 거라면
-                if (!contentDTO!!.anonymityCommentList.containsKey(auth?.currentUser?.uid!!)) {
-                    //리스트에 추가하고
-                    contentDTO!!.anonymityCommentList[auth?.currentUser?.uid!!] = true
-                    //카운트 +1 하기.
-                    contentDTO!!.anonymityCount = contentDTO!!.anonymityCount + 1
-
-                    firestore?.collection("users")?.document(uid!!)
-                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            if (documentSnapshot == null) return@addSnapshotListener
-                            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
-                            username = userDTO?.userName
-                            region = userDTO?.region
-
-                            var comment = ContentDTO.Comment()
-
-                            //코멘트 어노니미티에 저장하고.
-                            comment.anonymity[auth?.currentUser?.uid!!] = true
-                            //새로운 이름 부여.
-                            comment.anonymityName = "익명" + contentDTO?.anonymityCount.toString()
-
-                            comment.uid = FirebaseAuth.getInstance().currentUser?.uid
-                            comment.comment = binding.detailcontentEdittextComment.text.toString()
-                            comment.timestamp = System.currentTimeMillis()
-                            comment.userName = username
-
-                            FirebaseFirestore.getInstance().collection("contents")
-                                .document(contentUid!!)
-                                .collection("comments").document().set(comment)
-
-                            binding.detailcontentEdittextComment.setText("")
-                        }
-
-                } else {
-                    //익명으로 처음 글을 쓰는 것이 아니라면.
-                    firestore?.collection("users")?.document(uid!!)
-                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            if (documentSnapshot == null) return@addSnapshotListener
-                            println("5")
-                            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
-                            username = userDTO?.userName
-                            region = userDTO?.region
-
-                            var comment = ContentDTO.Comment()
-                            //코멘트 어노니미티에 저장하고.
-                            comment.anonymity[auth?.currentUser?.uid!!] = true
-                            //새로운 이름 부여.
-                            comment.anonymityName = "익명" + contentDTO?.anonymityCount.toString()
-
-                            comment.uid = FirebaseAuth.getInstance().currentUser?.uid
-                            comment.comment = binding.detailcontentEdittextComment.text.toString()
-                            comment.timestamp = System.currentTimeMillis()
-                            comment.userName = username
-
-                            FirebaseFirestore.getInstance().collection("contents")
-                                .document(contentUid!!)
-                                .collection("comments").document().set(comment)
-
-                            binding.detailcontentEdittextComment.setText("")
-                        }
-                }
                 transaction.set(tsDoc, contentDTO)
                 return@runTransaction
+
             }
-        } else {
-            //익명체크가 안되어 있다면.
-            var tsDoc = firestore?.collection("contents")?.document(contentUid!!)
-            firestore?.runTransaction { transaction ->
-                println("7")
-                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
-
-                contentDTO!!.comments[auth?.currentUser?.uid!!] = true
-
+        println("Comment_upload")
                 firestore?.collection("users")?.document(uid!!)
                     ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                         if (documentSnapshot == null) return@addSnapshotListener
                         println("5")
                         var userDTO = documentSnapshot.toObject(UserDTO::class.java)
                         username = userDTO?.userName
-                        region = userDTO?.region
 
                         var comment = ContentDTO.Comment()
 
@@ -382,14 +312,6 @@ class DetailContentActivity : AppCompatActivity() {
 
                         binding.detailcontentEdittextComment.setText("")
                     }
-
-                transaction.set(tsDoc, contentDTO)
-                return@runTransaction
-
-            }
-
-
-        }
 
 
     }
@@ -469,6 +391,7 @@ class DetailContentActivity : AppCompatActivity() {
                 if (documentSnapshot == null) return@addSnapshotListener
                 var contentDTO = documentSnapshot.toObject(ContentDTO::class.java)
                 binding.detailcontentTvCommentcount.text = contentDTO?.commentCount.toString()
+                binding.detailcontentTvCommentcountSecond.text = contentDTO?.commentCount.toString()
             }
     }
 
@@ -660,6 +583,126 @@ class DetailContentActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
+//    익명되는 코멘트 업로드
+//    fun commentUploads(anonymity: ContentDTO.Comment) {
+//        var uid = auth?.currentUser?.uid
+//        var username: String? = null
+//
+//        //익명 체크가 되었다
+//        if (anonymity.anonymity.containsKey(auth?.currentUser?.uid)) {
+//            var tsDoc = firestore?.collection("contents")?.document(contentUid!!)
+//            firestore?.runTransaction { transaction ->
+//                println("7")
+//                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+//
+//                //게시글에에 코멘트 단사람의 uid 추가
+//                contentDTO!!.comments[auth?.currentUser?.uid!!] = true
+//
+//                //익명으로 처음 댓글을 쓰는 거라면
+//                if (!contentDTO!!.anonymityCommentList.containsKey(auth?.currentUser?.uid!!)) {
+//                    //리스트에 추가하고
+//                    contentDTO!!.anonymityCommentList[auth?.currentUser?.uid!!] = true
+//                    //카운트 +1 하기.
+//                    contentDTO!!.anonymityCount = contentDTO!!.anonymityCount + 1
+//
+//                    firestore?.collection("users")?.document(uid!!)
+//                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+//                            if (documentSnapshot == null) return@addSnapshotListener
+//                            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+//                            username = userDTO?.userName
+//
+//                            var comment = ContentDTO.Comment()
+//
+//                            //코멘트 어노니미티에 저장하고.
+//                            comment.anonymity[auth?.currentUser?.uid!!] = true
+//                            //새로운 이름 부여.
+//                            comment.anonymityName = "익명" + contentDTO?.anonymityCount.toString()
+//
+//                            comment.uid = FirebaseAuth.getInstance().currentUser?.uid
+//                            comment.comment = binding.detailcontentEdittextComment.text.toString()
+//                            comment.timestamp = System.currentTimeMillis()
+//                            comment.userName = username
+//
+//                            FirebaseFirestore.getInstance().collection("contents")
+//                                .document(contentUid!!)
+//                                .collection("comments").document().set(comment)
+//
+//                            binding.detailcontentEdittextComment.setText("")
+//                        }
+//
+//                } else {
+//                    //익명으로 처음 글을 쓰는 것이 아니라면.
+//                    firestore?.collection("users")?.document(uid!!)
+//                        ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+//                            if (documentSnapshot == null) return@addSnapshotListener
+//                            println("5")
+//                            var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+//                            username = userDTO?.userName
+//
+//                            var comment = ContentDTO.Comment()
+//                            //코멘트 어노니미티에 저장하고.
+//                            comment.anonymity[auth?.currentUser?.uid!!] = true
+//                            //새로운 이름 부여.
+//                            comment.anonymityName = "익명" + contentDTO?.anonymityCount.toString()
+//
+//                            comment.uid = FirebaseAuth.getInstance().currentUser?.uid
+//                            comment.comment = binding.detailcontentEdittextComment.text.toString()
+//                            comment.timestamp = System.currentTimeMillis()
+//                            comment.userName = username
+//
+//                            FirebaseFirestore.getInstance().collection("contents")
+//                                .document(contentUid!!)
+//                                .collection("comments").document().set(comment)
+//
+//                            binding.detailcontentEdittextComment.setText("")
+//                        }
+//                }
+//                transaction.set(tsDoc, contentDTO)
+//                return@runTransaction
+//            }
+//        } else {
+//            //익명체크가 안되어 있다면.
+//            var tsDoc = firestore?.collection("contents")?.document(contentUid!!)
+//            firestore?.runTransaction { transaction ->
+//                println("7")
+//                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+//
+//                contentDTO!!.comments[auth?.currentUser?.uid!!] = true
+//
+//                firestore?.collection("users")?.document(uid!!)
+//                    ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+//                        if (documentSnapshot == null) return@addSnapshotListener
+//                        println("5")
+//                        var userDTO = documentSnapshot.toObject(UserDTO::class.java)
+//                        username = userDTO?.userName
+//
+//                        var comment = ContentDTO.Comment()
+//
+//                        comment.uid = FirebaseAuth.getInstance().currentUser?.uid
+//                        comment.comment = binding.detailcontentEdittextComment.text.toString()
+//                        comment.timestamp = System.currentTimeMillis()
+//                        comment.userName = username
+//
+//                        FirebaseFirestore.getInstance().collection("contents")
+//                            .document(contentUid!!)
+//                            .collection("comments").document().set(comment)
+//
+//                        binding.detailcontentEdittextComment.setText("")
+//                    }
+//
+//                transaction.set(tsDoc, contentDTO)
+//                return@runTransaction
+//
+//            }
+//
+//
+//        }
+//
+//
+//    }
+
+
 }
 
 
